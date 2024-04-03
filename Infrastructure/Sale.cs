@@ -12,4 +12,3 @@ public class Sale
     public long Price { get; set; }
     public long Number_of_sales { get; set; }
 }
-
