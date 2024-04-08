@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Infrastructure
 {
-    public partial class Sale
+    public partial class Book
     {
         public long Book_ID { get; set; }
-        public long Price { get; set; }
-        public long Number_Of_Sales { get; set; }        
+        public string Author { get; set; }
+        public string Title { get; set; }        
     }
 }
