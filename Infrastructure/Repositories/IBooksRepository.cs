@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-     public interface ISalesRepository
+     public interface IBooksRepository
     {
-        bool Add(Sale sale);
+        bool Add(Book book);
         bool Remove(int id);
-        bool Update(Sale sale);
-        List<Sale> GetAll();
-        Sale Get(int id);
-            
+        bool Update(Book book);
+        List<Book> GetAll();
+        Book Get(int id);            
     }    
 }

@@ -1,22 +1,23 @@
-﻿using System;
+﻿using Infrastructure.Repositories;
+using Infrastructure;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public class SalesRepository : ISalesRepository
+    public class BooksRepository : IBooksRepository
     {
-        public bool Add(Sale sale)
-        {            
+        public bool Add(Book book)
+        {
             using (ConsoleBookStoreContext db = new ConsoleBookStoreContext())
-            {                
-                db.Sales.Add(sale);
+            {
+                db.Books.Add(book);
                 db.SaveChanges();
                 return true;
-            }          
+            }
         }
 
         public Sale Get(int id)
@@ -24,7 +25,7 @@ namespace Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public List<Sale> GetAll()
+        public List<Book> GetAll()
         {
             throw new NotImplementedException();
         }
@@ -34,7 +35,7 @@ namespace Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public bool Update(Sale sale)
+        public bool Update(Book book)
         {
             throw new NotImplementedException();
         }
