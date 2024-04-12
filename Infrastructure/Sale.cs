@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure
 {
-    public partial class Sale
+    public class Sale
     {
         public long Book_ID { get; set; }
         public long Price { get; set; }

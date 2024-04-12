@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure
 {
-    public partial class Book
+    public class Book
     {
         public long Book_ID { get; set; }
         public string Author { get; set; }

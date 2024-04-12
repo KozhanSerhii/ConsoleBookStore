@@ -8,16 +8,17 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Infrastructure
 {
-    public partial class ConsoleBookStoreContextToBook : DbContext
+    public partial class ConsoleBookStoreContext : DbContext
     {
-        public ConsoleBookStoreContextToBook()
+        public ConsoleBookStoreContext()
         {
         }
-        public ConsoleBookStoreContextToBook(DbContextOptions<ConsoleBookStoreContextToBook> options)
+        public ConsoleBookStoreContext(DbContextOptions<ConsoleBookStoreContext> options)
             : base(options)
         {
         }
         public virtual DbSet<Book> Books { get; set; } = null!;
+        public virtual DbSet<Sale> Sales { get; set; } = null!;
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -29,9 +30,12 @@ namespace Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             OnModelCreatingPartial(modelBuilder);
-            modelBuilder.Entity<Book>()
+            modelBuilder.Entity<Book>()           
             .HasKey(b => b.Book_ID); // Вказання, що Book_ID є первинним ключем
-        }
+            modelBuilder.Entity<Sale>()
+            .HasKey(b => b.Book_ID); // Вказання, що Book_ID є первинним ключем
+        }      
+      
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-    }
+    }    
 }
