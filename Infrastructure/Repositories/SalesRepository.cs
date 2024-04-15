@@ -47,7 +47,20 @@ namespace Infrastructure.Repositories
 
         public bool Update(Sale sale)
         {
-            throw new NotImplementedException();
+            using (var context = new ConsoleBookStoreContext())
+            {
+                var existingBook = context.Sales.FirstOrDefault(b => b.Sale_ID == sale.Sale_ID);
+
+                if (existingBook != null)
+                {
+                    existingBook.Price = sale.Price;
+                    existingBook.Number_Of_Sales = sale.Number_Of_Sales;
+                    context.SaveChanges();
+                    return true; // Повертаємо true, якщо оновлення пройшло успішно
+                }
+
+                return false; // Повертаємо false, якщо книгу не знайдено за ID
+            }
         }
     }
 }
