@@ -8,6 +8,8 @@ namespace Infrastructure
 {
     public class Book
     {
+        internal int id;
+
         public long Book_ID { get; set; }
         public string Author { get; set; }
         public string Title { get; set; }        

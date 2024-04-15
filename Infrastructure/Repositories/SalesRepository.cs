@@ -29,9 +29,20 @@ namespace Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public bool Remove(int id)
+        public bool Remove(long id)
         {
-            throw new NotImplementedException();
+            using (var context = new ConsoleBookStoreContext())
+            {
+                var entityToDelete = context.Sales.FirstOrDefault(s => s.Sale_ID == id);
+
+                if (entityToDelete != null)
+                {
+                    context.Sales.Remove(entityToDelete);
+                    context.SaveChanges();
+                    return true;
+                }
+                return false;
+            }
         }
 
         public bool Update(Sale sale)

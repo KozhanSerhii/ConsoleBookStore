@@ -9,7 +9,7 @@ namespace Infrastructure.Repositories
      public interface ISalesRepository
     {
         bool Add(Sale sale);
-        bool Remove(int id);
+        bool Remove(long id);
         bool Update(Sale sale);
         List<Sale> GetAll();
         Sale Get(int id);

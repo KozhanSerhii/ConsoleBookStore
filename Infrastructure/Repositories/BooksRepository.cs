@@ -20,7 +20,7 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public Sale Get(int id)
+        public Book Get(int id)
         {
             throw new NotImplementedException();
         }
@@ -30,9 +30,21 @@ namespace Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public bool Remove(int id)
+        public bool Remove(string tittle, out long book_ID)
         {
-            throw new NotImplementedException();
+            using (var context = new ConsoleBookStoreContext())
+            {
+                var entityToDelete = context.Books.FirstOrDefault(b => b.Title.Trim().ToLower().Replace(" ", "") == tittle);
+                book_ID = entityToDelete != null ? entityToDelete.Book_ID : 0;
+                if (entityToDelete != null)
+                {
+                    context.Books.Remove(entityToDelete);
+                    context.SaveChanges();
+                    return true;
+                }
+                return false;
+            }
+
         }
 
         public bool Update(Book book)

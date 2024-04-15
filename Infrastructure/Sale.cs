@@ -8,7 +8,9 @@ namespace Infrastructure
 {
     public class Sale
     {
-        public long Book_ID { get; set; }
+        internal int id;
+
+        public long Sale_ID { get; set; }
         public long Price { get; set; }
         public long Number_Of_Sales { get; set; }        
     }

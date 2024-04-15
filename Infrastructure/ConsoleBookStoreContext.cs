@@ -33,7 +33,7 @@ namespace Infrastructure
             modelBuilder.Entity<Book>()           
             .HasKey(b => b.Book_ID); // Вказання, що Book_ID є первинним ключем
             modelBuilder.Entity<Sale>()
-            .HasKey(b => b.Book_ID); // Вказання, що Book_ID є первинним ключем
+            .HasKey(b => b.Sale_ID); // Вказання, що Sale_ID є первинним ключем
         }      
       
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

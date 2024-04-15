@@ -9,7 +9,7 @@ namespace Infrastructure.Repositories
      public interface IBooksRepository
     {
         bool Add(Book book);
-        bool Remove(int id);
+        bool Remove(string tittle, out long book_ID);
         bool Update(Book book);
         List<Book> GetAll();
         Book Get(int id);            
