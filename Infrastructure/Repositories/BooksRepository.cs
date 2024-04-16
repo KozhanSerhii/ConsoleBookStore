@@ -17,6 +17,7 @@ namespace Infrastructure.Repositories
         {
             _context = new ConsoleBookStoreContext();
         }
+
         public bool Add(Book book)
         {
             using (_context)
@@ -32,9 +33,14 @@ namespace Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
+        public Book? Get(string title, string author)
+        {
+            return _context.Books.SingleOrDefault(b => b.Author == author && b.Title == title);
+        }
+
         public List<Book> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Books.ToList();
         }
 
         public bool Remove(string tittle, out long book_ID)

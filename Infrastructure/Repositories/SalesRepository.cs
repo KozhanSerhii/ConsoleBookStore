@@ -9,6 +9,13 @@ namespace Infrastructure.Repositories
 {
     public class SalesRepository : ISalesRepository
     {
+        private ConsoleBookStoreContext _context;
+
+        public SalesRepository()
+        {
+            _context = new ConsoleBookStoreContext();
+        }
+
         public bool Add(Sale sale)
         {            
             using (ConsoleBookStoreContext db = new ConsoleBookStoreContext())
@@ -26,7 +33,7 @@ namespace Infrastructure.Repositories
 
         public List<Sale> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Sales.ToList();
         }
 
         public bool Remove(long id)
