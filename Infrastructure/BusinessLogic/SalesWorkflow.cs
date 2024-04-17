@@ -20,13 +20,14 @@ namespace Infrastructure.BusinessLogic
 
         public bool AddEntity(SalesDto dto)
         {
-            _booksRepository.Add(new Book { Title = dto.Title, Author = dto.Author });
+            _booksRepository.Add(new Book { Title = dto.Title, Author = dto.Author });            
             var newBook = _booksRepository.Get(dto.Title, dto.Author);
             if (newBook == null)
             {
                 throw new Exception("book is null");
             }
             _salesRepository.Add(new Sale { Book_ID = newBook.Book_ID, Number_Of_Sales = dto.Number_Of_Sales, Price = dto.Price });
+            
             return true;
         }
     }

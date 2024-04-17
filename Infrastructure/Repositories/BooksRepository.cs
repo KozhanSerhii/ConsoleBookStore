@@ -16,16 +16,16 @@ namespace Infrastructure.Repositories
         public BooksRepository()
         {
             _context = new ConsoleBookStoreContext();
-        }
-
+        }                  
+       
         public bool Add(Book book)
-        {
-            using (_context)
+        {           
+            using (ConsoleBookStoreContext _context = new ConsoleBookStoreContext())
             {
                 _context.Books.Add(book);
                 _context.SaveChanges();
                 return true;
-            }
+            }                       
         }
 
         public Book Get(int id)
@@ -35,8 +35,13 @@ namespace Infrastructure.Repositories
 
         public Book? Get(string title, string author)
         {
-            return _context.Books.SingleOrDefault(b => b.Author == author && b.Title == title);
+            using (ConsoleBookStoreContext context = new ConsoleBookStoreContext())
+            {
+                return context.Books.SingleOrDefault(b => b.Author == author && b.Title == title);
+            }
         }
+
+
 
         public List<Book> GetAll()
         {
@@ -47,7 +52,7 @@ namespace Infrastructure.Repositories
         {
             using (_context)
             {
-                var entityToDelete = _context.Books.FirstOrDefault(b => b.Title.Trim().ToLower().Replace(" ", "") == tittle);
+                var entityToDelete = _context.Books.SingleOrDefault(b => b.Title.Trim().ToLower().Replace(" ", "") == tittle);
                 book_ID = entityToDelete != null ? entityToDelete.Book_ID : 0;
                 if (entityToDelete != null)
                 {

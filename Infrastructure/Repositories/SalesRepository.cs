@@ -17,15 +17,14 @@ namespace Infrastructure.Repositories
         }
 
         public bool Add(Sale sale)
-        {            
-            using (ConsoleBookStoreContext db = new ConsoleBookStoreContext())
-            {                
-                db.Sales.Add(sale);
-                db.SaveChanges();
+        {
+            using (ConsoleBookStoreContext _context = new ConsoleBookStoreContext())
+            {
+                _context.Sales.Add(sale);
+                _context.SaveChanges();
                 return true;
-            }          
+            }
         }
-
         public Sale Get(int id)
         {
             throw new NotImplementedException();
@@ -38,14 +37,14 @@ namespace Infrastructure.Repositories
 
         public bool Remove(long id)
         {
-            using (var context = new ConsoleBookStoreContext())
+            using (_context)
             {
-                var entityToDelete = context.Sales.FirstOrDefault(s => s.Sale_ID == id);
+                var entityToDelete = _context.Sales.FirstOrDefault(s => s.Sale_ID == id);
 
                 if (entityToDelete != null)
                 {
-                    context.Sales.Remove(entityToDelete);
-                    context.SaveChanges();
+                    _context.Sales.Remove(entityToDelete);
+                    _context.SaveChanges();
                     return true;
                 }
                 return false;
@@ -54,15 +53,15 @@ namespace Infrastructure.Repositories
 
         public bool Update(Sale sale)
         {
-            using (var context = new ConsoleBookStoreContext())
+            using (_context)
             {
-                var existingBook = context.Sales.FirstOrDefault(b => b.Sale_ID == sale.Sale_ID);
+                var existingBook = _context.Sales.FirstOrDefault(b => b.Sale_ID == sale.Sale_ID);
 
                 if (existingBook != null)
                 {
                     existingBook.Price = sale.Price;
                     existingBook.Number_Of_Sales = sale.Number_Of_Sales;
-                    context.SaveChanges();
+                    _context.SaveChanges();
                     return true; // Повертаємо true, якщо оновлення пройшло успішно
                 }
 
