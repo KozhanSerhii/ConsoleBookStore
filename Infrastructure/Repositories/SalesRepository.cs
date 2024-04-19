@@ -25,9 +25,13 @@ namespace Infrastructure.Repositories
                 return true;
             }
         }
-        public Sale Get(int id)
+        
+        public Sale Get(long id)
         {
-            throw new NotImplementedException();
+            using (ConsoleBookStoreContext context = new ConsoleBookStoreContext())
+            {
+                return context.Sales.SingleOrDefault(b => b.Book_ID == id);
+            }
         }
 
         public List<Sale> GetAll()
@@ -39,7 +43,7 @@ namespace Infrastructure.Repositories
         {
             using (_context)
             {
-                var entityToDelete = _context.Sales.FirstOrDefault(s => s.Sale_ID == id);
+                var entityToDelete = _context.Sales.FirstOrDefault(s => s.Book_ID == id);
 
                 if (entityToDelete != null)
                 {
@@ -55,9 +59,9 @@ namespace Infrastructure.Repositories
         {
             using (_context)
             {
-                var existingBook = _context.Sales.FirstOrDefault(b => b.Sale_ID == sale.Sale_ID);
+                var existingBook = _context.Sales.FirstOrDefault(b => b.Book_ID == sale.Book_ID);
 
-                if (existingBook != null)
+                if (sale != null)
                 {
                     existingBook.Price = sale.Price;
                     existingBook.Number_Of_Sales = sale.Number_Of_Sales;

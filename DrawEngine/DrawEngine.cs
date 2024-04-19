@@ -6,7 +6,6 @@ namespace Common.DrawEngine
 {
     public class DrawEngine
     {
-        //private ConsoleBookStoreContext _context;
         private ISalesRepository _salesRepository;
         private IBooksRepository _booksRepository;
 
@@ -19,7 +18,7 @@ namespace Common.DrawEngine
         public void PrintMenu()
         {
             Console.WriteLine("Оберіть пункт меню:");
-            Console.WriteLine("1.Переглянути продажі книгарні");            
+            Console.WriteLine("1.Переглянути продажі книгарні");
             Console.WriteLine("2.Вийти з програми");
         }
 
@@ -29,8 +28,8 @@ namespace Common.DrawEngine
             {
                 return Convert.ToInt32(Console.ReadLine());
             }
-            catch(Exception ex) 
-            { 
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex.Message);
                 return -1;
             }
@@ -56,7 +55,7 @@ namespace Common.DrawEngine
                 if (book == null)
                     throw new Exception("book not found");
 
-                Console.WriteLine($"{book.Title}, {book.Author}, {sale.Price}, {sale.Number_Of_Sales}");
+                Console.WriteLine($"{book.Book_ID}, {book.Title}, {book.Author}, {sale.Price}, {sale.Number_Of_Sales}");
             }
         }
         public void AddSale(SalesDto newSale)
@@ -77,82 +76,49 @@ namespace Common.DrawEngine
             if (long.TryParse(Console.ReadLine(), out long result2))
                 newSale.Number_Of_Sales = result2;
             else
-                Console.WriteLine();            
+                Console.WriteLine();
         }
 
         public bool RemoveSale()
         {
-            Console.WriteLine("Введіть назву книжки яку хочете видалити");
-            string tittleRemove = Console.ReadLine().Trim().ToLower().Replace(" ", "");
-            if (_booksRepository.Remove(tittleRemove, out long id) == true && _salesRepository.Remove(id) == true)
+            Console.WriteLine("Введіть id книжки яку хочете видалити");
+            long idRemove = Convert.ToInt32(Console.ReadLine());
+            if (_booksRepository.Remove(idRemove) == true && _salesRepository.Remove(idRemove) == true)
             {
                 return true;
             }
-            return false;                         
+            return false;
         }
-        public void f1(int choice)
+        public bool UpdateSale()
         {
-            Sale sale1 = new Sale();
-            Book book1 = new Book();
+            Console.WriteLine("Введіть id книжки запис якої хочете змінити");
+            long idUpdate = Convert.ToInt32(Console.ReadLine());
 
-            switch (choice)
+            var book = _booksRepository.Get(idUpdate);
+            Console.WriteLine("Введіть оновленого автора книги");
+            book.Author = Console.ReadLine();
+
+            Console.WriteLine("Введіть оновлену назву книги");
+            book.Title = Console.ReadLine();
+
+            var sale = _salesRepository.Get(idUpdate);
+            Console.WriteLine("Введіть оновлену ціну книги");
+            if (long.TryParse(Console.ReadLine(), out long result))
+                sale.Price = result;
+            else
+                Console.WriteLine();
+
+            Console.WriteLine("Введіть оновлену кількість проданих примірників книги");
+            if (long.TryParse(Console.ReadLine(), out long result1))
+                sale.Number_Of_Sales = result1;
+            else
+                Console.WriteLine();
+
+            if (_booksRepository.Update(book) == true && _salesRepository.Update(sale) == true)
             {
-                case 1:
-                    {
-                        PrintSalesMenu();
-                        PrintSalesMenu();
-                        choice = Convert.ToInt32(Console.ReadLine());
-                        switch (choice)
-                        {                                                        
-                            case 3:
-                                {
-                                    Console.WriteLine("Введіть назву книжки запис якої хочете редагувати");
-                                    string tittleUpdate = Console.ReadLine().Trim().ToLower().Replace(" ", "");
-                                    BooksRepository updateBook = new BooksRepository();
-                                    SalesRepository updateSale = new SalesRepository();
-
-                                    using (var context = new ConsoleBookStoreContext())
-                                    {
-                                        var entityToUpdate = context.Books.FirstOrDefault(b => b.Title.Trim().ToLower().Replace(" ", "") == tittleUpdate);
-                                        long book_ID = entityToUpdate != null ? entityToUpdate.Book_ID : 0;
-                                        Console.WriteLine("Введіть оновленого автора книги");
-                                        entityToUpdate.Author = Console.ReadLine();
-
-                                        Console.WriteLine("Введіть оновлену назву книги");
-                                        entityToUpdate.Title = Console.ReadLine();
-
-                                        var entityToUpdate2 = context.Sales.FirstOrDefault(s => s.Sale_ID == book_ID);
-
-                                        Console.WriteLine("Введіть оновлену ціну книги");
-                                        if (long.TryParse(Console.ReadLine(), out long result1))
-                                            entityToUpdate2.Price = result1;
-                                        else
-                                            Console.WriteLine();
-
-                                        Console.WriteLine("Введіть оновлену кількість проданих примірників книги");
-                                        if (long.TryParse(Console.ReadLine(), out long result2))
-                                            entityToUpdate2.Number_Of_Sales = result2;
-                                        else
-                                            Console.WriteLine();
-
-                                        if (updateBook.Update(entityToUpdate) == true && updateSale.Update(entityToUpdate2) == true)
-                                            Console.WriteLine("Запис успішно змінений");
-                                    }
-                                    break;
-                                }
-                            case 4:
-                                break;
-                            default:
-                                {
-                                    break;
-                                }
-                        }
-                        break;
-                    }
-                default:
-                    break;
+                return true;
             }
+            return false;
         }
     }
-
 }

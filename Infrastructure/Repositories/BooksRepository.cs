@@ -28,11 +28,14 @@ namespace Infrastructure.Repositories
             }                       
         }
 
-        public Book Get(int id)
+        public Book Get(long id)
         {
-            throw new NotImplementedException();
+            using (ConsoleBookStoreContext context = new ConsoleBookStoreContext())
+            {
+                return context.Books.SingleOrDefault(b => b.Book_ID == id);
+            }
         }
-
+         
         public Book? Get(string title, string author)
         {
             using (ConsoleBookStoreContext context = new ConsoleBookStoreContext())
@@ -48,12 +51,12 @@ namespace Infrastructure.Repositories
             return _context.Books.ToList();
         }
 
-        public bool Remove(string tittle, out long book_ID)
+        public bool Remove(long id)
         {
             using (_context)
             {
-                var entityToDelete = _context.Books.SingleOrDefault(b => b.Title.Trim().ToLower().Replace(" ", "") == tittle);
-                book_ID = entityToDelete != null ? entityToDelete.Book_ID : 0;
+                var entityToDelete = _context.Books.FirstOrDefault(s => s.Book_ID == id);
+
                 if (entityToDelete != null)
                 {
                     _context.Books.Remove(entityToDelete);
@@ -71,7 +74,7 @@ namespace Infrastructure.Repositories
             {
                 var existingBook = _context.Books.FirstOrDefault(b => b.Book_ID == book.Book_ID);
 
-                if (existingBook != null)
+                if (book != null)
                 {
                     existingBook.Title = book.Title;
                     existingBook.Author = book.Author;

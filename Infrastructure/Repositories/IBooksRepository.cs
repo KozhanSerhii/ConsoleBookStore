@@ -9,10 +9,10 @@ namespace Infrastructure.Repositories
      public interface IBooksRepository
     {
         bool Add(Book book);
-        bool Remove(string tittle, out long book_ID);
+        bool Remove(long id);
         bool Update(Book book);
         List<Book> GetAll();
-        Book Get(int id);
+        Book Get(long id);
         Book? Get(string title, string author);
     }
 }
