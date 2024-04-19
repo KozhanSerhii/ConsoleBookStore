@@ -8,11 +8,13 @@ namespace Common.DrawEngine
     {
         private ISalesRepository _salesRepository;
         private IBooksRepository _booksRepository;
+        private ISalesWorkflow _salesWorkflow;
 
         public DrawEngine()
         {
             _salesRepository = new SalesRepository();
             _booksRepository = new BooksRepository();
+            _salesWorkflow = new SalesWorkflow();
         }
 
         public void PrintMenu()
@@ -58,8 +60,9 @@ namespace Common.DrawEngine
                 Console.WriteLine($"{book.Book_ID}, {book.Title}, {book.Author}, {sale.Price}, {sale.Number_Of_Sales}");
             }
         }
-        public void AddSale(SalesDto newSale)
+        public bool AddSale()
         {
+            var newSale = new SaleDto();
             Console.WriteLine("Введіть автора книги");
             newSale.Author = Console.ReadLine();
 
@@ -67,41 +70,65 @@ namespace Common.DrawEngine
             newSale.Title = Console.ReadLine();
 
             Console.WriteLine("Введіть ціну книги");
-            if (long.TryParse(Console.ReadLine(), out long result1))
+            var price = Console.ReadLine();
+            if (long.TryParse(price, out long result1))
                 newSale.Price = result1;
             else
-                Console.WriteLine();
+                DrawQuestion(price);
 
             Console.WriteLine("Введіть кількість проданих примірників книги");
-            if (long.TryParse(Console.ReadLine(), out long result2))
+            var number = Console.ReadLine();
+            if (long.TryParse(number, out long result2))
                 newSale.Number_Of_Sales = result2;
             else
-                Console.WriteLine();
+                DrawQuestion(number);
+
+            return _salesWorkflow.AddEntity(newSale);
+        }
+
+        private void DrawQuestion(object? obj)
+        {
+            var value = obj is null ? "Incorrect format" : obj.ToString();
+            Console.WriteLine($"Дані були введені некорректно: {value} .Оберіть пункт меню:");
+            Console.WriteLine("1.Повторити введення");
+            Console.WriteLine("2.повернутися до головного меню");
+            var answer = ReadEnteredValue();
+            if (answer == 1)
+                AddSale();
+            else 
+                PrintSalesMenu();
         }
 
         public bool RemoveSale()
         {
             Console.WriteLine("Введіть id книжки яку хочете видалити");
-            long idRemove = Convert.ToInt32(Console.ReadLine());
-            if (_booksRepository.Remove(idRemove) == true && _salesRepository.Remove(idRemove) == true)
-            {
-                return true;
+            var input = Console.ReadLine();
+            if (!int.TryParse(input, out int id)){
+                Console.WriteLine($"Дані були введені некорректно: {input}. Повернення до головного меню");
+                PrintSalesMenu();
             }
-            return false;
+
+            return _salesWorkflow.DeleteEntity(id);
         }
+
         public bool UpdateSale()
         {
-            Console.WriteLine("Введіть id книжки запис якої хочете змінити");
-            long idUpdate = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Введіть ID книжки запис якої хочете змінити");
+            var idBook =Console.ReadLine();
+            if (!long.TryParse(idBook, out long id))
+            {
+                Console.WriteLine($"Дані були введені некорректно: {idBook}. Повернення до головного меню");
+                PrintSalesMenu();
+            }
 
-            var book = _booksRepository.Get(idUpdate);
+            var book = _booksRepository.Get(id);
             Console.WriteLine("Введіть оновленого автора книги");
             book.Author = Console.ReadLine();
 
             Console.WriteLine("Введіть оновлену назву книги");
             book.Title = Console.ReadLine();
 
-            var sale = _salesRepository.Get(idUpdate);
+            var sale = _salesRepository.Get(id);
             Console.WriteLine("Введіть оновлену ціну книги");
             if (long.TryParse(Console.ReadLine(), out long result))
                 sale.Price = result;

@@ -18,11 +18,8 @@ while (1 > 0)
             switch (choice)
             {   
                 case 1: 
-                {
-                    SalesDto newSale = new SalesDto();
-                    engine.AddSale(newSale);
-                    SalesWorkflow addSales = new SalesWorkflow();
-                    if (addSales.AddEntity(newSale) == true)                    
+                {                    
+                    if (engine.AddSale() == true)                    
                         Console.WriteLine("Запис успішно доданий");                    
                     else
                         Console.WriteLine("Запис не вдалося додати");

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.BusinessLogic
 {
-    public class SalesDto
+    public class SaleDto
     {
         public string Author { get; set; }
         public string Title { get; set; }
