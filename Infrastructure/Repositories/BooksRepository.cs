@@ -20,48 +20,48 @@ namespace Infrastructure.Repositories
        
         public bool Add(Book book)
         {
-            using (_context)
+            using (ConsoleBookStoreContext context = new ConsoleBookStoreContext())
             {
-                _context.Books.Add(book);
-                _context.SaveChanges();
+                context.Books.Add(book);
+                context.SaveChanges();
                 return true;
             }                       
         }
 
         public Book? Get(long id)
         {
-            using (ConsoleBookStoreContext _context = new ConsoleBookStoreContext())
+            using (ConsoleBookStoreContext context = new ConsoleBookStoreContext())
             {
-                return _context.Books.SingleOrDefault(b => b.Book_ID == id);
+                return context.Books.SingleOrDefault(b => b.Book_ID == id);
             }
         }
          
         public Book? Get(string title, string author)
         {
-            using (ConsoleBookStoreContext _context = new ConsoleBookStoreContext())
+            using (ConsoleBookStoreContext context = new ConsoleBookStoreContext())
             {
-                return _context.Books.SingleOrDefault(b => 
-                    b.Author.Replace(" ", "") == author.Trim().Replace(" ", "").ToLower() && b.Title.Replace(" ", "") == title.Trim().Replace(" ", "").ToLower());
+                var a = author.Trim().Replace(" ", "").ToLower();
+                var t = title.Trim().Replace(" ", "").ToLower();
+                return context.Books.SingleOrDefault(b => 
+                    b.Author.Replace(" ", "").ToLower() == a && b.Title.Replace(" ", "").ToLower() == t);
             }
         }
 
-
-
         public List<Book> GetAll()
         {
-            return _context.Books.ToList();
+            return [.. _context.Books];
         }
 
         public bool Remove(long id)
         {
-            using (ConsoleBookStoreContext _context = new ConsoleBookStoreContext())
+            using (ConsoleBookStoreContext context = new ConsoleBookStoreContext())
             {
-                var entityToDelete = _context.Books.FirstOrDefault(s => s.Book_ID == id);
+                var entityToDelete = context.Books.FirstOrDefault(s => s.Book_ID == id);
 
                 if (entityToDelete != null)
                 {
-                    _context.Books.Remove(entityToDelete);
-                    _context.SaveChanges();
+                    context.Books.Remove(entityToDelete);
+                    context.SaveChanges();
                     return true;
                 }
                 return false;
@@ -71,15 +71,15 @@ namespace Infrastructure.Repositories
 
         public bool Update(Book book)
         {
-            using (ConsoleBookStoreContext _context = new ConsoleBookStoreContext())
+            using (ConsoleBookStoreContext context = new ConsoleBookStoreContext())
             {
-                var existingBook = _context.Books.FirstOrDefault(b => b.Book_ID == book.Book_ID);
+                var existingBook = context.Books.FirstOrDefault(b => b.Book_ID == book.Book_ID);
 
                 if (existingBook != null)
                 {
                     existingBook.Title = book.Title;
                     existingBook.Author = book.Author;
-                    _context.SaveChanges();
+                    context.SaveChanges();
                     return true; // Повертаємо true, якщо оновлення пройшло успішно
                 }
 
