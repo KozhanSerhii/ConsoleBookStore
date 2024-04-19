@@ -1,0 +1,14 @@
+﻿using Infrastructure.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Infrastructure.BusinessLogic
+{
+    public class BooksWorkflow : IBooksWorkflow
+    {
+        
+    }
+}

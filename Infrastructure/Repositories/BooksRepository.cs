@@ -19,8 +19,8 @@ namespace Infrastructure.Repositories
         }                  
        
         public bool Add(Book book)
-        {           
-            using (ConsoleBookStoreContext _context = new ConsoleBookStoreContext())
+        {
+            using (_context)
             {
                 _context.Books.Add(book);
                 _context.SaveChanges();
@@ -28,19 +28,20 @@ namespace Infrastructure.Repositories
             }                       
         }
 
-        public Book Get(long id)
+        public Book? Get(long id)
         {
-            using (ConsoleBookStoreContext context = new ConsoleBookStoreContext())
+            using (ConsoleBookStoreContext _context = new ConsoleBookStoreContext())
             {
-                return context.Books.SingleOrDefault(b => b.Book_ID == id);
+                return _context.Books.SingleOrDefault(b => b.Book_ID == id);
             }
         }
          
         public Book? Get(string title, string author)
         {
-            using (ConsoleBookStoreContext context = new ConsoleBookStoreContext())
+            using (ConsoleBookStoreContext _context = new ConsoleBookStoreContext())
             {
-                return context.Books.SingleOrDefault(b => b.Author == author && b.Title == title);
+                return _context.Books.SingleOrDefault(b => 
+                    b.Author.Replace(" ", "") == author.Trim().Replace(" ", "").ToLower() && b.Title.Replace(" ", "") == title.Trim().Replace(" ", "").ToLower());
             }
         }
 
@@ -53,7 +54,7 @@ namespace Infrastructure.Repositories
 
         public bool Remove(long id)
         {
-            using (_context)
+            using (ConsoleBookStoreContext _context = new ConsoleBookStoreContext())
             {
                 var entityToDelete = _context.Books.FirstOrDefault(s => s.Book_ID == id);
 
@@ -70,11 +71,11 @@ namespace Infrastructure.Repositories
 
         public bool Update(Book book)
         {
-            using (_context)
+            using (ConsoleBookStoreContext _context = new ConsoleBookStoreContext())
             {
                 var existingBook = _context.Books.FirstOrDefault(b => b.Book_ID == book.Book_ID);
 
-                if (book != null)
+                if (existingBook != null)
                 {
                     existingBook.Title = book.Title;
                     existingBook.Author = book.Author;

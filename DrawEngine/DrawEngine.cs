@@ -21,9 +21,25 @@ namespace Common.DrawEngine
         {
             Console.WriteLine("Оберіть пункт меню:");
             Console.WriteLine("1.Переглянути продажі книгарні");
-            Console.WriteLine("2.Вийти з програми");
+            Console.WriteLine("2.Переглянути існуючі книги");
+            Console.WriteLine("3.Вийти з програми");
+        }        
+        public void PrintBooksMenu()
+        {
+            Console.WriteLine("Оберіть пункт меню:");
+            Console.WriteLine("1.Додати запис до таблиці");
+            Console.WriteLine("2.Видалити запис з таблиці");
+            Console.WriteLine("3.Редактувати запис з таблиці");
+            Console.WriteLine("4.Повернутися назад");
         }
-
+        public void PrintSalesMenu()
+        {
+            Console.WriteLine("Оберіть пункт меню:");
+            Console.WriteLine("1.Додати запис до таблиці");
+            Console.WriteLine("2.Видалити запис з таблиці");
+            Console.WriteLine("3.Редактувати запис з таблиці");
+            Console.WriteLine("4.Повернутися назад");
+        }
         public int ReadEnteredValue()
         {
             try
@@ -37,15 +53,6 @@ namespace Common.DrawEngine
             }
         }
 
-        public void PrintSalesMenu()
-        {
-            Console.WriteLine("Оберіть пункт меню:");
-            Console.WriteLine("1.Додати запис до таблиці");
-            Console.WriteLine("2.Видалити запис з таблиці");
-            Console.WriteLine("3.Редактувати запис з таблиці");
-            Console.WriteLine("4.Повернутися назад");
-        }
-
         public void PrintAllSales()
         {
             var sales = _salesRepository.GetAll();
@@ -57,7 +64,7 @@ namespace Common.DrawEngine
                 if (book == null)
                     throw new Exception("book not found");
 
-                Console.WriteLine($"{book.Book_ID}, {book.Title}, {book.Author}, {sale.Price}, {sale.Number_Of_Sales}");
+                Console.WriteLine($"{sale.Sale_ID}, {book.Title}, {book.Author}, {sale.Price}, {sale.Number_Of_Sales}");
             }
         }
         public bool AddSale()
@@ -113,22 +120,23 @@ namespace Common.DrawEngine
 
         public bool UpdateSale()
         {
-            Console.WriteLine("Введіть ID книжки запис якої хочете змінити");
-            var idBook =Console.ReadLine();
-            if (!long.TryParse(idBook, out long id))
+            Console.WriteLine("Введіть ID запису продажу який хочете змінити");
+            var idSale = Console.ReadLine();
+            if (!long.TryParse(idSale, out long id))
             {
-                Console.WriteLine($"Дані були введені некорректно: {idBook}. Повернення до головного меню");
+                Console.WriteLine($"Дані були введені некорректно: {idSale}. Повернення до головного меню");
                 PrintSalesMenu();
+                return false;
             }
 
-            var book = _booksRepository.Get(id);
-            Console.WriteLine("Введіть оновленого автора книги");
-            book.Author = Console.ReadLine();
-
-            Console.WriteLine("Введіть оновлену назву книги");
-            book.Title = Console.ReadLine();
-
             var sale = _salesRepository.Get(id);
+            if (sale == null)
+            {
+                Console.WriteLine("Запис не знайдено");
+                PrintSalesMenu();
+                return false;
+            }
+            PrintSale(sale);
             Console.WriteLine("Введіть оновлену ціну книги");
             if (long.TryParse(Console.ReadLine(), out long result))
                 sale.Price = result;
@@ -141,11 +149,22 @@ namespace Common.DrawEngine
             else
                 Console.WriteLine();
 
-            if (_booksRepository.Update(book) == true && _salesRepository.Update(sale) == true)
+            Console.WriteLine("Чи хочете ви змінити ID книги?  1 - так, 2 - ні");
+            var input1 = ReadEnteredValue();
+            if (input1 == 1)
             {
-                return true;
+                Console.WriteLine("Введіть ID книги");
+                var input2 = ReadEnteredValue();
+                sale.Book_ID = input2;
+
             }
-            return false;
+
+            return _salesWorkflow.UpdateSaleEntity(sale);
+        }
+
+        private void PrintSale(Sale sale)
+        {
+            Console.WriteLine($"{sale.Sale_ID}, {sale.Book_ID}, {sale.Price}, {sale.Number_Of_Sales}");
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Infrastructure.Repositories
         bool Remove(long id);
         bool Update(Sale sale);
         List<Sale> GetAll();
-        Sale Get(long id);
+        Sale? Get(long id);
             
     }    
 }

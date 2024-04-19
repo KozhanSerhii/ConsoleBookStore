@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.BusinessLogic
 {
-    public interface ISalesWorkflow
+    public class BookDto
     {
-        public bool AddEntity(SaleDto dto);
-        public bool DeleteEntity(int id);
-        public bool UpdateSaleEntity(Sale dto);
+         
     }
 }

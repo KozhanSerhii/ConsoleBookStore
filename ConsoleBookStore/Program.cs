@@ -49,6 +49,9 @@ while (1 > 0)
             break;
         }
         case 2:
+
+            break;
+        case 3:
             return 0;       
     }
 

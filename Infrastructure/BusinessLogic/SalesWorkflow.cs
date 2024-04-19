@@ -19,8 +19,12 @@ namespace Infrastructure.BusinessLogic
         }
 
         public bool AddEntity(SaleDto dto)
-        {            
-            _booksRepository.Add(new Book { Title = dto.Title, Author = dto.Author });            
+        {
+            var existBook = _booksRepository.Get(dto.Title, dto.Author);
+            if (existBook == null) 
+            {
+                _booksRepository.Add(new Book { Title = dto.Title, Author = dto.Author });
+            }                       
             var newBook = _booksRepository.Get(dto.Title, dto.Author);
             if (newBook == null)
             {
@@ -35,9 +39,9 @@ namespace Infrastructure.BusinessLogic
             return (_booksRepository.Remove(id) == true && _salesRepository.Remove(id) == true);
         }
 
-        public bool UpdateEntity(SaleDto dto)
+        public bool UpdateSaleEntity(Sale sale)
         {
-            throw new NotImplementedException();
+            return _salesRepository.Update(sale);
         }
     }
 }

@@ -26,11 +26,11 @@ namespace Infrastructure.Repositories
             }
         }
         
-        public Sale Get(long id)
+        public Sale? Get(long id)
         {
-            using (ConsoleBookStoreContext context = new ConsoleBookStoreContext())
+            using (ConsoleBookStoreContext _context = new ConsoleBookStoreContext())
             {
-                return context.Sales.SingleOrDefault(b => b.Book_ID == id);
+                return _context.Sales.SingleOrDefault(b => b.Sale_ID == id);
             }
         }
 
@@ -41,9 +41,9 @@ namespace Infrastructure.Repositories
 
         public bool Remove(long id)
         {
-            using (_context)
+            using (ConsoleBookStoreContext _context = new ConsoleBookStoreContext())
             {
-                var entityToDelete = _context.Sales.FirstOrDefault(s => s.Book_ID == id);
+                var entityToDelete = _context.Sales.FirstOrDefault(s => s.Sale_ID == id);
 
                 if (entityToDelete != null)
                 {
@@ -57,14 +57,14 @@ namespace Infrastructure.Repositories
 
         public bool Update(Sale sale)
         {
-            using (_context)
+            using (ConsoleBookStoreContext _context = new ConsoleBookStoreContext())
             {
-                var existingBook = _context.Sales.FirstOrDefault(b => b.Book_ID == sale.Book_ID);
+                var existingSale = _context.Sales.FirstOrDefault(b => b.Sale_ID == sale.Sale_ID);
 
-                if (sale != null)
+                if (existingSale != null)
                 {
-                    existingBook.Price = sale.Price;
-                    existingBook.Number_Of_Sales = sale.Number_Of_Sales;
+                    existingSale.Price = sale.Price;
+                    existingSale.Number_Of_Sales = sale.Number_Of_Sales;
                     _context.SaveChanges();
                     return true; // Повертаємо true, якщо оновлення пройшло успішно
                 }

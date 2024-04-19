@@ -12,7 +12,7 @@ namespace Infrastructure.Repositories
         bool Remove(long id);
         bool Update(Book book);
         List<Book> GetAll();
-        Book Get(long id);
+        Book? Get(long id);
         Book? Get(string title, string author);
     }
 }
