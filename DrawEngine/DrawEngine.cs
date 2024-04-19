@@ -19,26 +19,26 @@ namespace Common.DrawEngine
 
         public void PrintMenu()
         {
-            Console.WriteLine("Оберіть пункт меню:");
-            Console.WriteLine("1.Переглянути продажі книгарні");
-            Console.WriteLine("2.Переглянути існуючі книги");
-            Console.WriteLine("3.Вийти з програми");
+            Console.WriteLine("menu general:");
+            Console.WriteLine("1.look sales book's");
+            Console.WriteLine("2.look all books");
+            Console.WriteLine("3.exit");
         }        
         public void PrintBooksMenu()
         {
-            Console.WriteLine("Оберіть пункт меню:");
-            Console.WriteLine("1.Додати запис до таблиці");
-            Console.WriteLine("2.Видалити запис з таблиці");
-            Console.WriteLine("3.Редактувати запис з таблиці");
-            Console.WriteLine("4.Повернутися назад");
+            Console.WriteLine("menu books:");
+            Console.WriteLine("1.add");
+            Console.WriteLine("2.remove");
+            Console.WriteLine("3.upd");
+            Console.WriteLine("4.turn back");
         }
         public void PrintSalesMenu()
         {
-            Console.WriteLine("Оберіть пункт меню:");
-            Console.WriteLine("1.Додати запис до таблиці");
-            Console.WriteLine("2.Видалити запис з таблиці");
-            Console.WriteLine("3.Редактувати запис з таблиці");
-            Console.WriteLine("4.Повернутися назад");
+            Console.WriteLine("menu sales:");
+            Console.WriteLine("1.add");
+            Console.WriteLine("2.remove");
+            Console.WriteLine("3.upd");
+            Console.WriteLine("4.turn back");
         }
         public int ReadEnteredValue()
         {
@@ -67,23 +67,33 @@ namespace Common.DrawEngine
                 Console.WriteLine($"{sale.Sale_ID}, {book.Title}, {book.Author}, {sale.Price}, {sale.Number_Of_Sales}");
             }
         }
+
+        public void PrintAllBooks()
+        {
+            var books = _booksRepository.GetAll();
+            foreach(var book in books)
+            {
+                Console.WriteLine($"{book.Book_ID}, {book.Title}, {book.Author}");
+            }
+        }
+
         public bool AddSale()
         {
             var newSale = new SaleDto();
-            Console.WriteLine("Введіть автора книги");
+            Console.WriteLine("enter author");
             newSale.Author = Console.ReadLine();
 
-            Console.WriteLine("Введіть назву книги");
+            Console.WriteLine("enter book name");
             newSale.Title = Console.ReadLine();
 
-            Console.WriteLine("Введіть ціну книги");
+            Console.WriteLine("enter price");
             var price = Console.ReadLine();
             if (long.TryParse(price, out long result1))
                 newSale.Price = result1;
             else
                 DrawQuestion(price);
 
-            Console.WriteLine("Введіть кількість проданих примірників книги");
+            Console.WriteLine("enter count");
             var number = Console.ReadLine();
             if (long.TryParse(number, out long result2))
                 newSale.Number_Of_Sales = result2;
@@ -108,7 +118,7 @@ namespace Common.DrawEngine
 
         public bool RemoveSale()
         {
-            Console.WriteLine("Введіть id книжки яку хочете видалити");
+            Console.WriteLine("enter id book");
             var input = Console.ReadLine();
             if (!int.TryParse(input, out int id)){
                 Console.WriteLine($"Дані були введені некорректно: {input}. Повернення до головного меню");
@@ -120,7 +130,7 @@ namespace Common.DrawEngine
 
         public bool UpdateSale()
         {
-            Console.WriteLine("Введіть ID запису продажу який хочете змінити");
+            Console.WriteLine("enter Id sale");
             var idSale = Console.ReadLine();
             if (!long.TryParse(idSale, out long id))
             {
@@ -137,23 +147,23 @@ namespace Common.DrawEngine
                 return false;
             }
             PrintSale(sale);
-            Console.WriteLine("Введіть оновлену ціну книги");
+            Console.WriteLine("enter new price");
             if (long.TryParse(Console.ReadLine(), out long result))
                 sale.Price = result;
             else
                 Console.WriteLine();
 
-            Console.WriteLine("Введіть оновлену кількість проданих примірників книги");
+            Console.WriteLine("enter new count");
             if (long.TryParse(Console.ReadLine(), out long result1))
                 sale.Number_Of_Sales = result1;
             else
                 Console.WriteLine();
 
-            Console.WriteLine("Чи хочете ви змінити ID книги?  1 - так, 2 - ні");
+            Console.WriteLine("change ID of book?  1 - y, 2 - n");
             var input1 = ReadEnteredValue();
             if (input1 == 1)
             {
-                Console.WriteLine("Введіть ID книги");
+                Console.WriteLine("enter new if of book");
                 var input2 = ReadEnteredValue();
                 sale.Book_ID = input2;
 
