@@ -9,12 +9,13 @@ namespace Common.DrawEngine
         private ISalesRepository _salesRepository;
         private IBooksRepository _booksRepository;
         private ISalesWorkflow _salesWorkflow;
-
+        private IBooksWorkflow _booksWorkflow;
         public DrawEngine()
         {
             _salesRepository = new SalesRepository();
             _booksRepository = new BooksRepository();
             _salesWorkflow = new SalesWorkflow();
+            _booksWorkflow = new BooksWorkflow();
         }
 
         public void PrintMenu()
@@ -102,6 +103,17 @@ namespace Common.DrawEngine
 
             return _salesWorkflow.AddEntity(newSale);
         }
+        public bool AddBook()
+        {
+            var newBook = new BookDto();
+            Console.WriteLine("enter author");
+            newBook.Author = Console.ReadLine();
+
+            Console.WriteLine("enter book name");
+            newBook.Title = Console.ReadLine();            
+
+            return _booksWorkflow.AddEntity(newBook);
+        }
 
         private void DrawQuestion(object? obj)
         {
@@ -126,6 +138,18 @@ namespace Common.DrawEngine
             }
 
             return _salesWorkflow.DeleteEntity(id);
+        }
+        public bool RemoveBook()
+        {
+            Console.WriteLine("enter id book");
+            var input = Console.ReadLine();
+            if (!int.TryParse(input, out int id))
+            {
+                Console.WriteLine($"Дані були введені некорректно: {input}. Повернення до головного меню");
+                PrintBooksMenu();
+            }
+
+            return _booksWorkflow.DeleteEntity(id);
         }
 
         public bool UpdateSale()
@@ -172,9 +196,52 @@ namespace Common.DrawEngine
             return _salesWorkflow.UpdateSaleEntity(sale);
         }
 
+        public bool UpdateBook()
+        {
+            Console.WriteLine("enter Id book");
+            var idBook = Console.ReadLine();
+            if (!long.TryParse(idBook, out long id))
+            {
+                Console.WriteLine($"Дані були введені некорректно: {idBook}. Повернення до головного меню");
+                PrintBooksMenu();
+                return false;
+            }
+
+            var book = _booksRepository.Get(id);
+            if (book == null)
+            {
+                Console.WriteLine("Запис не знайдено");
+                PrintBooksMenu();
+                return false;
+            }
+            PrintBook(book);
+            Console.WriteLine("enter new Title");
+            string title = Console.ReadLine();
+            book.Title = title;
+
+            Console.WriteLine("enter new Author");
+            string author = Console.ReadLine();
+            book.Author = author;
+
+            Console.WriteLine("change ID of book?  1 - y, 2 - n");
+            var input1 = ReadEnteredValue();
+            if (input1 == 1)
+            {
+                Console.WriteLine("enter new if of book");
+                var input2 = ReadEnteredValue();
+                book.Book_ID = input2;
+
+            }
+
+            return _booksWorkflow.UpdateSaleEntity(book);
+        }
         private void PrintSale(Sale sale)
         {
             Console.WriteLine($"{sale.Sale_ID}, {sale.Book_ID}, {sale.Price}, {sale.Number_Of_Sales}");
+        }
+        private void PrintBook(Book book)
+        {
+            Console.WriteLine($"{book.Book_ID}, {book.Title}, {book.Author}");
         }
     }
 }

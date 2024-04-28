@@ -56,7 +56,7 @@ namespace Infrastructure.Repositories
         {
             using (ConsoleBookStoreContext context = new ConsoleBookStoreContext())
             {
-                var entityToDelete = context.Books.FirstOrDefault(s => s.Book_ID == id);
+                var entityToDelete = context.Books.SingleOrDefault(s => s.Book_ID == id);
 
                 if (entityToDelete != null)
                 {

@@ -8,6 +8,8 @@ namespace Infrastructure.BusinessLogic
 {
     public interface IBooksWorkflow
     {
-        
+        public bool AddEntity(BookDto dto);
+        public bool DeleteEntity(int id);
+        public bool UpdateSaleEntity(Book dto);
     }
 }

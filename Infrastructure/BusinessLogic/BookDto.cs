@@ -8,6 +8,7 @@ namespace Infrastructure.BusinessLogic
 {
     public class BookDto
     {
-         
+        public string Author { get; set; }
+        public string Title { get; set; }       
     }
 }
