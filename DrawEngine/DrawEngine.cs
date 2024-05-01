@@ -56,216 +56,172 @@ namespace Common.DrawEngine
                 return -1;
             }
         }
-        public void PrintTopSale()
+
+        public SaleLength CalculateSaleLength() 
         {
             var sales = _salesRepository.GetAll();
             var books = _booksRepository.GetAll();
 
-            string str = "Sale ID";            
-            int maxSaleIDLength = sales.Max(s => s.Sale_ID.ToString().Length) > str.Length ? sales.Max(s => s.Sale_ID.ToString().Length) : str.Length;
+            SaleLength lengthSales = new();
+            string str = "Sale ID";
+            lengthSales.maxSaleIDLength = sales.Max(s => s.Sale_ID.ToString().Length) > str.Length ? sales.Max(s => s.Sale_ID.ToString().Length) : str.Length;
             str = "Title";
-            int maxTitleLength = books.Max(b => b.Title.Length) > str.Length ? books.Max(b => b.Title.Length) : str.Length;
+            lengthSales.maxTitleLength = books.Max(b => b.Title.Length) > str.Length ? books.Max(b => b.Title.Length) : str.Length;
             str = "Author";
-            int maxAuthorLength = books.Max(b => b.Author.Length) > str.Length ? books.Max(b => b.Author.Length) : str.Length;
+            lengthSales.maxAuthorLength = books.Max(b => b.Author.Length) > str.Length ? books.Max(b => b.Author.Length) : str.Length;
             str = "Price";
-            int maxPriceLength = sales.Max(s => s.Price.ToString().Length) > str.Length ? sales.Max(s => s.Price.ToString().Length) : str.Length;
+            lengthSales.maxPriceLength = sales.Max(s => s.Price.ToString().Length) > str.Length ? sales.Max(s => s.Price.ToString().Length) : str.Length;
             str = "Number Of Sales";
-            int maxNumberOfSalesLength = sales.Max(s => s.Number_Of_Sales.ToString().Length) > str.Length ? sales.Max(s => s.Number_Of_Sales.ToString().Length) : str.Length;
-            int max = maxSaleIDLength + maxTitleLength + maxAuthorLength + maxPriceLength + maxNumberOfSalesLength;
-            for (int i = 0; i <= max + 5; i++)
+            lengthSales.maxNumberOfSalesLength = sales.Max(s => s.Number_Of_Sales.ToString().Length) > str.Length ? sales.Max(s => s.Number_Of_Sales.ToString().Length) : str.Length;
+
+            lengthSales.maxStringLength = lengthSales.maxSaleIDLength + lengthSales.maxTitleLength + lengthSales.maxAuthorLength + lengthSales.maxPriceLength + lengthSales.maxNumberOfSalesLength;
+            return lengthSales;
+        }
+        public BookLength CalculateBookLength()
+        {            
+            var books = _booksRepository.GetAll();
+
+            BookLength lengthBooks = new();
+
+            string str = "Book ID";
+            lengthBooks.maxBookIDLength = books.Max(s => s.Book_ID.ToString().Length) > str.Length ? books.Max(s => s.Book_ID.ToString().Length) : str.Length;
+            str = "Title";
+            lengthBooks.maxTitleLength = books.Max(b => b.Title.Length) > str.Length ? books.Max(b => b.Title.Length) : str.Length;
+            str = "Author";
+            lengthBooks.maxAuthorLength = books.Max(b => b.Author.Length) > str.Length ? books.Max(b => b.Author.Length) : str.Length;
+            lengthBooks.maxStringLength = lengthBooks.maxBookIDLength + lengthBooks.maxTitleLength + lengthBooks.maxAuthorLength;
+            return lengthBooks;
+        }
+        public void PrintTopSale(SaleLength lengthSales)
+        {                    
+            for (int i = 0; i <= lengthSales.maxStringLength + 5; i++)
             {
                 Console.Write("-");
             }
             Console.WriteLine();
             Console.Write("|");
-            int dynamicIndent = maxSaleIDLength; // Динамічний відступ, який можна змінювати
+            int dynamicIndent = lengthSales.maxSaleIDLength; // Динамічний відступ, який можна змінювати
             string text = "Sale ID";
             Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
 
-            dynamicIndent = maxTitleLength; // Динамічний відступ, який можна змінювати
+            dynamicIndent = lengthSales.maxTitleLength; // Динамічний відступ, який можна змінювати
             text = "Title";
             Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
 
-            dynamicIndent = maxAuthorLength; // Динамічний відступ, який можна змінювати
+            dynamicIndent = lengthSales.maxAuthorLength; // Динамічний відступ, який можна змінювати
             text = "Author";
             Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
 
-            dynamicIndent = maxPriceLength; // Динамічний відступ, який можна змінювати
+            dynamicIndent = lengthSales.maxPriceLength; // Динамічний відступ, який можна змінювати
             text = "Price";
             Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
 
-            dynamicIndent = maxNumberOfSalesLength; // Динамічний відступ, який можна змінювати
+            dynamicIndent = lengthSales.maxNumberOfSalesLength; // Динамічний відступ, який можна змінювати
             text = "Number Of Sales";
             Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
             Console.WriteLine();
         }
         
-        public void PrintMiddleSale()
+        public void PrintMiddleSale(SaleLength lengthSales)
         {
             var sales = _salesRepository.GetAll();
-            var books = _booksRepository.GetAll();
-
-            string str = "Sale ID";
-            int maxSaleIDLength = sales.Max(s => s.Sale_ID.ToString().Length) > str.Length ? sales.Max(s => s.Sale_ID.ToString().Length) : str.Length;
-            str = "Title";
-            int maxTitleLength = books.Max(b => b.Title.Length) > str.Length ? books.Max(b => b.Title.Length) : str.Length;
-            str = "Author";
-            int maxAuthorLength = books.Max(b => b.Author.Length) > str.Length ? books.Max(b => b.Author.Length) : str.Length;
-            str = "Price";
-            int maxPriceLength = sales.Max(s => s.Price.ToString().Length) > str.Length ? sales.Max(s => s.Price.ToString().Length) : str.Length;
-            str = "Number Of Sales";
-            int maxNumberOfSalesLength = sales.Max(s => s.Number_Of_Sales.ToString().Length) > str.Length ? sales.Max(s => s.Number_Of_Sales.ToString().Length) : str.Length;
-            int max = maxSaleIDLength + maxTitleLength + maxAuthorLength + maxPriceLength + maxNumberOfSalesLength;
+            var books = _booksRepository.GetAll();            
 
             foreach (var sale in sales)
             {
-                PrintLowSale();
+                PrintLowSale(lengthSales);
                 Console.Write("|");
                 var book = books.FirstOrDefault(b => b.Book_ID == sale.Book_ID);
 
                 if (book == null)
                     throw new Exception("book not found");
                 
-                int dynamicIndent = maxSaleIDLength; // Динамічний відступ, який можна змінювати
+                int dynamicIndent = lengthSales.maxSaleIDLength; // Динамічний відступ, який можна змінювати
                 string text = Convert.ToString(sale.Sale_ID);
                 Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
 
-                dynamicIndent = maxTitleLength; // Динамічний відступ, який можна змінювати
+                dynamicIndent = lengthSales.maxTitleLength; // Динамічний відступ, який можна змінювати
                 text = Convert.ToString(book.Title); ;
                 Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
 
-                dynamicIndent = maxAuthorLength; // Динамічний відступ, який можна змінювати
+                dynamicIndent = lengthSales.maxAuthorLength; // Динамічний відступ, який можна змінювати
                 text = Convert.ToString(book.Author); ;
                 Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
 
-                dynamicIndent = maxPriceLength; // Динамічний відступ, який можна змінювати
+                dynamicIndent = lengthSales.maxPriceLength; // Динамічний відступ, який можна змінювати
                 text = Convert.ToString(sale.Price); ;
                 Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
 
-                dynamicIndent = maxNumberOfSalesLength; // Динамічний відступ, який можна змінювати
+                dynamicIndent = lengthSales.maxNumberOfSalesLength; // Динамічний відступ, який можна змінювати
                 text = Convert.ToString(sale.Number_Of_Sales); ;
                 Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
 
                 Console.WriteLine();
-
-
             }
-
-
         }
-        public void PrintLowSale()
-        {
-            var sales = _salesRepository.GetAll();
-            var books = _booksRepository.GetAll();
-
-            string str = "Sale ID";
-            int maxSaleIDLength = sales.Max(s => s.Sale_ID.ToString().Length) > str.Length ? sales.Max(s => s.Sale_ID.ToString().Length) : str.Length;
-            str = "Title";
-            int maxTitleLength = books.Max(b => b.Title.Length) > str.Length ? books.Max(b => b.Title.Length) : str.Length;
-            str = "Author";
-            int maxAuthorLength = books.Max(b => b.Author.Length) > str.Length ? books.Max(b => b.Author.Length) : str.Length;
-            str = "Price";
-            int maxPriceLength = sales.Max(s => s.Price.ToString().Length) > str.Length ? sales.Max(s => s.Price.ToString().Length) : str.Length;
-            str = "Number Of Sales";
-            int maxNumberOfSalesLength = sales.Max(s => s.Number_Of_Sales.ToString().Length) > str.Length ? sales.Max(s => s.Number_Of_Sales.ToString().Length) : str.Length;
-            int max = maxSaleIDLength + maxTitleLength + maxAuthorLength + maxPriceLength + maxNumberOfSalesLength;
-            for (int i = 0; i <= max + 5; i++)
+        public void PrintLowSale(SaleLength lengthSales)
+        {                   
+            for (int i = 0; i <= lengthSales.maxStringLength + 5; i++)
             {
                 Console.Write("-");
             }
             Console.WriteLine();
         }        
-        public void PrintTopBook()
-        {            
-            var books = _booksRepository.GetAll();
+        public void PrintTopBook(BookLength lengthBooks)
+        {                               
             
-            string str = "Title";
-            int maxTitleLength = books.Max(b => b.Title.Length) > str.Length ? books.Max(b => b.Title.Length) : str.Length;
-
-            str = "Author";
-            int maxAuthorLength = books.Max(b => b.Author.Length) > str.Length ? books.Max(b => b.Author.Length) : str.Length;            
-
-            str = "Book ID";
-            int maxBookIDLength = books.Max(s => s.Book_ID.ToString().Length > str.Length ? books.Max(s => s.Book_ID.ToString().Length) : str.Length);
-            
-            int max = maxTitleLength + maxAuthorLength + maxBookIDLength;
-            for (int i = 0; i <= max + 3; i++)
+            for (int i = 0; i <= lengthBooks.maxStringLength + 3; i++)
             {
                 Console.Write("-");
             }
             Console.WriteLine();
-            Console.Write("|");
-            
+            Console.Write("|");            
 
-            int dynamicIndent = maxBookIDLength; // Динамічний відступ, який можна змінювати
+            int dynamicIndent = lengthBooks.maxBookIDLength; // Динамічний відступ, який можна змінювати
             string text = "Book ID";
             Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
 
-            dynamicIndent = maxTitleLength; // Динамічний відступ, який можна змінювати
+            dynamicIndent = lengthBooks.maxTitleLength; // Динамічний відступ, який можна змінювати
             text = "Title";
             Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
 
-            dynamicIndent = maxAuthorLength; // Динамічний відступ, який можна змінювати
+            dynamicIndent = lengthBooks.maxAuthorLength; // Динамічний відступ, який можна змінювати
             text = "Author";
             Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
             Console.WriteLine();
         }
 
-        public void PrintMiddleBook()
+        public void PrintMiddleBook(BookLength lengthBooks)
         {            
             var books = _booksRepository.GetAll();
-
-            string str = "Title";
-            int maxTitleLength = books.Max(b => b.Title.Length) > str.Length ? books.Max(b => b.Title.Length) : str.Length;
-
-            str = "Author";
-            int maxAuthorLength = books.Max(b => b.Author.Length) > str.Length ? books.Max(b => b.Author.Length) : str.Length;
-
-            str = "Book ID";
-            int maxBookIDLength = books.Max(s => s.Book_ID.ToString().Length > str.Length ? books.Max(s => s.Book_ID.ToString().Length) : str.Length);
-
-            int max = maxTitleLength + maxAuthorLength + maxBookIDLength;
+            
             foreach (var book in books)
             {
-                PrintLowBook();
+                PrintLowBook(lengthBooks);
                 Console.Write("|");                
 
                 if (book == null)
                     throw new Exception("book not found");
 
-                int dynamicIndent = maxBookIDLength; // Динамічний відступ, який можна змінювати
+                int dynamicIndent = lengthBooks.maxBookIDLength; // Динамічний відступ, який можна змінювати
                 string text = Convert.ToString(book.Book_ID);
                 Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
 
-                dynamicIndent = maxTitleLength; // Динамічний відступ, який можна змінювати
+                dynamicIndent = lengthBooks.maxTitleLength; // Динамічний відступ, який можна змінювати
                 text = Convert.ToString(book.Title); ;
                 Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
 
-                dynamicIndent = maxAuthorLength; // Динамічний відступ, який можна змінювати
+                dynamicIndent = lengthBooks.maxAuthorLength; // Динамічний відступ, який можна змінювати
                 text = Convert.ToString(book.Author); ;
                 Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
 
                 Console.WriteLine();
-
             }
 
         }
-        public void PrintLowBook()
-        {
-            var sales = _salesRepository.GetAll();
-            var books = _booksRepository.GetAll();
-
-            string str = "Title";
-            int maxTitleLength = books.Max(b => b.Title.Length) > str.Length ? books.Max(b => b.Title.Length) : str.Length;
-
-            str = "Author";
-            int maxAuthorLength = books.Max(b => b.Author.Length) > str.Length ? books.Max(b => b.Author.Length) : str.Length;
-
-            str = "Book ID";
-            int maxBookIDLength = books.Max(s => s.Book_ID.ToString().Length > str.Length ? books.Max(s => s.Book_ID.ToString().Length) : str.Length);
-            int max = maxTitleLength + maxAuthorLength + maxBookIDLength;
-
-            for (int i = 0; i <= max + 3; i++)
+        public void PrintLowBook(BookLength lengthBooks)
+        {                     
+            for (int i = 0; i <= lengthBooks.maxStringLength + 3; i++)
             {
                 Console.Write("-");
             }
@@ -273,15 +229,15 @@ namespace Common.DrawEngine
         }
         public void PrintAllSales()
         {            
-            PrintTopSale();
-            PrintMiddleSale();
-            PrintLowSale();
+            PrintTopSale(CalculateSaleLength());
+            PrintMiddleSale(CalculateSaleLength());
+            PrintLowSale(CalculateSaleLength());
         }
         public void PrintAllBooks()
         {            
-            PrintTopBook();
-            PrintMiddleBook();
-            PrintLowBook();
+            PrintTopBook(CalculateBookLength());
+            PrintMiddleBook(CalculateBookLength());
+            PrintLowBook(CalculateBookLength());
         }
 
         public bool AddSale()
