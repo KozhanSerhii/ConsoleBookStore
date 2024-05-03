@@ -20,25 +20,25 @@ while (1 > 0)
                 case 1: 
                 {                    
                     if (engine.AddSale() == true)                    
-                        Console.WriteLine("Запис успішно доданий");                    
+                        Console.WriteLine("Record successfully added");                    
                     else
-                        Console.WriteLine("Запис не вдалося додати");
+                        Console.WriteLine("The entry could not be added");
                     break;
                 }
                 case 2:
                 {
                     if (engine.RemoveSale() == true)                    
-                        Console.WriteLine("Запис успішно видалений");
+                        Console.WriteLine("Record successfully deleted");
                     else
-                        Console.WriteLine("Запис не вдалося видалити");
+                        Console.WriteLine("The record could not be deleted");
                     break;
                 }
                 case 3:
                 {
                     if (engine.UpdateSale() == true)
-                        Console.WriteLine("Запис успішно змінений");
+                        Console.WriteLine("Record successfully changed");
                     else
-                        Console.WriteLine("Запис не вдалося оновити");
+                        Console.WriteLine("The record could not be updated");
                     break;                    
                 }
                 case 4:
@@ -57,25 +57,25 @@ while (1 > 0)
                 case 1:
                     {
                         if (engine.AddBook() == true)
-                            Console.WriteLine("Запис успішно доданий");
+                            Console.WriteLine("Record successfully added");
                         else
-                            Console.WriteLine("Запис не вдалося додати");
+                            Console.WriteLine("The recording failed additionally");
                         break;
                     }
                 case 2:
                     {
                         if (engine.RemoveBook() == true)
-                            Console.WriteLine("Запис успішно видалений");
+                            Console.WriteLine("Record successfully deleted");
                         else
-                            Console.WriteLine("Запис не вдалося видалити");
+                            Console.WriteLine("The record could not be deleted");
                         break;
                     }
                 case 3:
                     {
                         if (engine.UpdateBook() == true)
-                            Console.WriteLine("Запис успішно змінений");
+                            Console.WriteLine("Record successfully changed");
                         else
-                            Console.WriteLine("Запис не вдалося оновити");
+                            Console.WriteLine("The record could not be updated");
                         break;
                     }
                 case 4:

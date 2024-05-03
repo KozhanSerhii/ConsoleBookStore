@@ -52,7 +52,7 @@ namespace Infrastructure.Repositories
             return [.. _context.Books];
         }
 
-        public bool Remove(long id)
+        public bool RemoveBook(long id)
         {
             using (ConsoleBookStoreContext context = new ConsoleBookStoreContext())
             {
@@ -68,7 +68,29 @@ namespace Infrastructure.Repositories
             }
 
         }
+        public bool RemoveSales(long id)
+        {
+            using (ConsoleBookStoreContext context = new ConsoleBookStoreContext())
+            {
+                int x = 0;
+                while (1 > 0)
+                {
+                    var entityToDelete = context.Sales.FirstOrDefault(s => s.Book_ID == id);
 
+                    if (entityToDelete != null)
+                    {
+                        context.Sales.Remove(entityToDelete);
+                        context.SaveChanges();
+                        x ++;
+                    }
+                    else
+                        break;
+                }                
+                if (x == 0)
+                    return false;
+                return true;
+            }
+        }
         public bool Update(Book book)
         {
             using (ConsoleBookStoreContext context = new ConsoleBookStoreContext())

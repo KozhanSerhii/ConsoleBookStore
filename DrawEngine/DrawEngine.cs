@@ -23,26 +23,26 @@ namespace Common.DrawEngine
 
         public void PrintMenu()
         {
-            Console.WriteLine("menu general:");
-            Console.WriteLine("1.look sales book's");
-            Console.WriteLine("2.look all books");
-            Console.WriteLine("3.exit");
+            Console.WriteLine("General menu:");
+            Console.WriteLine("1.See the bookstore sales");
+            Console.WriteLine("2.See all books");
+            Console.WriteLine("3.Exit");
         }        
         public void PrintBooksMenu()
         {
-            Console.WriteLine("menu books:");
-            Console.WriteLine("1.add");
-            Console.WriteLine("2.remove");
-            Console.WriteLine("3.upd");
-            Console.WriteLine("4.turn back");
+            Console.WriteLine("Book menu:");
+            Console.WriteLine("1.Add");
+            Console.WriteLine("2.Remove");
+            Console.WriteLine("3.Update");
+            Console.WriteLine("4.Turn back");
         }
         public void PrintSalesMenu()
         {
-            Console.WriteLine("menu sales:");
-            Console.WriteLine("1.add");
-            Console.WriteLine("2.remove");
-            Console.WriteLine("3.upd");
-            Console.WriteLine("4.turn back");
+            Console.WriteLine("Bookstore sales menu:");
+            Console.WriteLine("1.Add");
+            Console.WriteLine("2.Remove");
+            Console.WriteLine("3.Update");
+            Console.WriteLine("4.Turn back");
         }
         public int ReadEnteredValue()
         {
@@ -92,7 +92,7 @@ namespace Common.DrawEngine
             lengthBooks.maxStringLength = lengthBooks.maxBookIDLength + lengthBooks.maxTitleLength + lengthBooks.maxAuthorLength;
             return lengthBooks;
         }
-        public void PrintTopSale(SaleLength lengthSales)
+        public void PrintSaleColumnsNames(SaleLength lengthSales)
         {                    
             for (int i = 0; i <= lengthSales.maxStringLength + 5; i++)
             {
@@ -122,20 +122,20 @@ namespace Common.DrawEngine
             Console.WriteLine();
         }
         
-        public void PrintMiddleSale(SaleLength lengthSales)
+        public void PrintSalesContent(SaleLength lengthSales)
         {
             var sales = _salesRepository.GetAll();
             var books = _booksRepository.GetAll();            
 
             foreach (var sale in sales)
             {
-                PrintLowSale(lengthSales);
+                PrintSaleLowerBorder(lengthSales);
                 Console.Write("|");
                 var book = books.FirstOrDefault(b => b.Book_ID == sale.Book_ID);
 
                 if (book == null)
-                    throw new Exception("book not found");
-                
+                    throw new Exception("The Book not found");
+
                 int dynamicIndent = lengthSales.maxSaleIDLength; // Динамічний відступ, який можна змінювати
                 string text = Convert.ToString(sale.Sale_ID);
                 Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
@@ -159,7 +159,7 @@ namespace Common.DrawEngine
                 Console.WriteLine();
             }
         }
-        public void PrintLowSale(SaleLength lengthSales)
+        public void PrintSaleLowerBorder(SaleLength lengthSales)
         {                   
             for (int i = 0; i <= lengthSales.maxStringLength + 5; i++)
             {
@@ -167,7 +167,7 @@ namespace Common.DrawEngine
             }
             Console.WriteLine();
         }        
-        public void PrintTopBook(BookLength lengthBooks)
+        public void PrintBookColumnsNames(BookLength lengthBooks)
         {                               
             
             for (int i = 0; i <= lengthBooks.maxStringLength + 3; i++)
@@ -191,17 +191,17 @@ namespace Common.DrawEngine
             Console.WriteLine();
         }
 
-        public void PrintMiddleBook(BookLength lengthBooks)
+        public void PrintBooksContent(BookLength lengthBooks)
         {            
             var books = _booksRepository.GetAll();
             
             foreach (var book in books)
             {
-                PrintLowBook(lengthBooks);
+                PrintBookLowerBorder(lengthBooks);
                 Console.Write("|");                
 
                 if (book == null)
-                    throw new Exception("book not found");
+                    throw new Exception("The Book not found");
 
                 int dynamicIndent = lengthBooks.maxBookIDLength; // Динамічний відступ, який можна змінювати
                 string text = Convert.ToString(book.Book_ID);
@@ -219,7 +219,7 @@ namespace Common.DrawEngine
             }
 
         }
-        public void PrintLowBook(BookLength lengthBooks)
+        public void PrintBookLowerBorder(BookLength lengthBooks)
         {                     
             for (int i = 0; i <= lengthBooks.maxStringLength + 3; i++)
             {
@@ -228,35 +228,39 @@ namespace Common.DrawEngine
             Console.WriteLine();
         }
         public void PrintAllSales()
-        {            
-            PrintTopSale(CalculateSaleLength());
-            PrintMiddleSale(CalculateSaleLength());
-            PrintLowSale(CalculateSaleLength());
+        {
+            SaleLength saleLength = new();
+            saleLength = CalculateSaleLength();
+            PrintSaleColumnsNames(saleLength);
+            PrintSalesContent(saleLength);
+            PrintSaleLowerBorder(saleLength);
         }
         public void PrintAllBooks()
-        {            
-            PrintTopBook(CalculateBookLength());
-            PrintMiddleBook(CalculateBookLength());
-            PrintLowBook(CalculateBookLength());
+        {
+            BookLength bookLength = new();
+            bookLength = CalculateBookLength();
+            PrintBookColumnsNames(bookLength);
+            PrintBooksContent(bookLength);
+            PrintBookLowerBorder(bookLength);
         }
 
         public bool AddSale()
         {
             var newSale = new SaleDto();
-            Console.WriteLine("enter author");
+            Console.WriteLine("Enter the author of the book");
             newSale.Author = Console.ReadLine();
 
-            Console.WriteLine("enter book name");
+            Console.WriteLine("Enter the title of the book");
             newSale.Title = Console.ReadLine();
 
-            Console.WriteLine("enter price");
+            Console.WriteLine("Enter the price of the book");
             var price = Console.ReadLine();
             if (long.TryParse(price, out long result1))
                 newSale.Price = result1;
             else
                 DrawQuestion(price);
 
-            Console.WriteLine("enter count");
+            Console.WriteLine("Enter the number of copies of the book sold");
             var number = Console.ReadLine();
             if (long.TryParse(number, out long result2))
                 newSale.Number_Of_Sales = result2;
@@ -268,10 +272,10 @@ namespace Common.DrawEngine
         public bool AddBook()
         {
             var newBook = new BookDto();
-            Console.WriteLine("enter author");
+            Console.WriteLine("Enter the author of the book");
             newBook.Author = Console.ReadLine();
 
-            Console.WriteLine("enter book name");
+            Console.WriteLine("Enter the title of the book");
             newBook.Title = Console.ReadLine();            
 
             return _booksWorkflow.AddEntity(newBook);
@@ -280,9 +284,9 @@ namespace Common.DrawEngine
         private void DrawQuestion(object? obj)
         {
             var value = obj is null ? "Incorrect format" : obj.ToString();
-            Console.WriteLine($"Дані були введені некорректно: {value} .Оберіть пункт меню:");
-            Console.WriteLine("1.Повторити введення");
-            Console.WriteLine("2.повернутися до головного меню");
+            Console.WriteLine($"The data was entered incorrectly: {value} .Select the menu item:");
+            Console.WriteLine("1.Repeat the input");
+            Console.WriteLine("2.Return to the main menu");
             var answer = ReadEnteredValue();
             if (answer == 1)
                 AddSale();
@@ -292,10 +296,10 @@ namespace Common.DrawEngine
 
         public bool RemoveSale()
         {
-            Console.WriteLine("enter id book");
+            Console.WriteLine("Enter the book ID");
             var input = Console.ReadLine();
             if (!int.TryParse(input, out int id)){
-                Console.WriteLine($"Дані були введені некорректно: {input}. Повернення до головного меню");
+                Console.WriteLine($"The data was entered incorrectly: {input}. Select the menu item");
                 PrintSalesMenu();
             }
 
@@ -303,24 +307,34 @@ namespace Common.DrawEngine
         }
         public bool RemoveBook()
         {
-            Console.WriteLine("enter id book");
-            var input = Console.ReadLine();
-            if (!int.TryParse(input, out int id))
-            {
-                Console.WriteLine($"Дані були введені некорректно: {input}. Повернення до головного меню");
-                PrintBooksMenu();
-            }
+            var sales = _salesRepository.GetAll();
+            var books = _booksRepository.GetAll();
 
-            return _booksWorkflow.DeleteEntity(id);
+            Console.WriteLine("Enter the book ID");
+            var input = Console.ReadLine();
+            if (!int.TryParse(input, out int idBook))
+            {
+                Console.WriteLine($"The data was entered incorrectly: {input}. Select the menu item");
+                PrintBooksMenu();
+            }            
+
+            _booksWorkflow.DeleteEntityBook(idBook);            
+
+            foreach (var sale in sales)
+            {
+                return _booksWorkflow.DeleteEntitySales(idBook);
+            }
+            return false;
+            
         }
 
         public bool UpdateSale()
         {
-            Console.WriteLine("enter Id sale");
+            Console.WriteLine("Enter the sales ID");
             var idSale = Console.ReadLine();
             if (!long.TryParse(idSale, out long id))
             {
-                Console.WriteLine($"Дані були введені некорректно: {idSale}. Повернення до головного меню");
+                Console.WriteLine($"The data was entered incorrectly: {idSale}. Select the menu item");
                 PrintSalesMenu();
                 return false;
             }
@@ -328,43 +342,42 @@ namespace Common.DrawEngine
             var sale = _salesRepository.Get(id);
             if (sale == null)
             {
-                Console.WriteLine("Запис не знайдено");
+                Console.WriteLine("No record found");
                 PrintSalesMenu();
                 return false;
             }
             PrintSale(sale);
-            Console.WriteLine("enter new price");
+            Console.WriteLine("Enter a new price");
             if (long.TryParse(Console.ReadLine(), out long result))
                 sale.Price = result;
             else
                 Console.WriteLine();
 
-            Console.WriteLine("enter new count");
+            Console.WriteLine("Enter the new number of copies of the book sold");
             if (long.TryParse(Console.ReadLine(), out long result1))
                 sale.Number_Of_Sales = result1;
             else
                 Console.WriteLine();
 
-            Console.WriteLine("change ID of book?  1 - y, 2 - n");
+            Console.WriteLine("Сhange ID of book?  1 - yes, 2 - no");
             var input1 = ReadEnteredValue();
             if (input1 == 1)
             {
-                Console.WriteLine("enter new if of book");
+                Console.WriteLine("Enter a new book ID");
                 var input2 = ReadEnteredValue();
                 sale.Book_ID = input2;
 
             }
-
             return _salesWorkflow.UpdateSaleEntity(sale);
         }
 
         public bool UpdateBook()
         {
-            Console.WriteLine("enter Id book");
+            Console.WriteLine("Enter the book ID");
             var idBook = Console.ReadLine();
             if (!long.TryParse(idBook, out long id))
             {
-                Console.WriteLine($"Дані були введені некорректно: {idBook}. Повернення до головного меню");
+                Console.WriteLine($"The data was entered incorrectly: {idBook}. Select the menu item");
                 PrintBooksMenu();
                 return false;
             }
@@ -372,24 +385,24 @@ namespace Common.DrawEngine
             var book = _booksRepository.Get(id);
             if (book == null)
             {
-                Console.WriteLine("Запис не знайдено");
+                Console.WriteLine("No record found");
                 PrintBooksMenu();
                 return false;
             }
             PrintBook(book);
-            Console.WriteLine("enter new Title");
+            Console.WriteLine("Enter a new book title");
             string title = Console.ReadLine();
             book.Title = title;
 
-            Console.WriteLine("enter new Author");
+            Console.WriteLine("Enter a new book author");
             string author = Console.ReadLine();
             book.Author = author;
 
-            Console.WriteLine("change ID of book?  1 - y, 2 - n");
+            Console.WriteLine("Change ID of book?  1 - yes, 2 - no");
             var input1 = ReadEnteredValue();
             if (input1 == 1)
             {
-                Console.WriteLine("enter new if of book");
+                Console.WriteLine("Enter a new book ID");
                 var input2 = ReadEnteredValue();
                 book.Book_ID = input2;
 

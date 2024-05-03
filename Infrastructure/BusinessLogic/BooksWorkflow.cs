@@ -31,7 +31,16 @@ namespace Infrastructure.BusinessLogic
 
         public bool DeleteEntity(int id)
         {
-            return (_booksRepository.Remove(id) == true || _salesRepository.Remove(id) == true);
+            throw new NotImplementedException();
+        }
+
+        public bool DeleteEntityBook(int idBook)
+        {
+            return (_booksRepository.RemoveBook(idBook));
+        }
+        public bool DeleteEntitySales(long idBook)
+        {
+            return (_booksRepository.RemoveSales(idBook));
         }
 
         public bool UpdateSaleEntity(Book book)
