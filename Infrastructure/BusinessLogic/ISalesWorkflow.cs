@@ -8,8 +8,10 @@ namespace Infrastructure.BusinessLogic
 {
     public interface ISalesWorkflow
     {
-        public bool AddEntity(SaleDto dto);
-        public bool DeleteEntity(int id);
-        public bool UpdateSaleEntity(Sale dto);
+        bool AddEntity(SaleDto dto);
+        bool DeleteEntity(int id);
+        bool UpdateSaleEntity(Sale dto);
+        List<Sale> GetAll();
+        Sale? Get(long id);
     }
 }

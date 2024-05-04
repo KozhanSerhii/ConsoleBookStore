@@ -3,46 +3,50 @@ using Infrastructure.BusinessLogic;
 using Infrastructure.Repositories;
 using Microsoft.VisualBasic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using static System.Reflection.Metadata.BlobBuilder;
+
 
 namespace Common.DrawEngine
 {
     public class DrawEngine
-    {
-        private ISalesRepository _salesRepository;
-        private IBooksRepository _booksRepository;
+    {               
         private ISalesWorkflow _salesWorkflow;
         private IBooksWorkflow _booksWorkflow;
         public DrawEngine()
-        {
-            _salesRepository = new SalesRepository();
-            _booksRepository = new BooksRepository();
+        {            
             _salesWorkflow = new SalesWorkflow();
             _booksWorkflow = new BooksWorkflow();
         }
 
         public void PrintMenu()
         {
+            PrintBorder();
             Console.WriteLine("General menu:");
             Console.WriteLine("1.See the bookstore sales");
             Console.WriteLine("2.See all books");
             Console.WriteLine("3.Exit");
+            PrintBorder();
         }        
         public void PrintBooksMenu()
         {
+            PrintBorder();
             Console.WriteLine("Book menu:");
             Console.WriteLine("1.Add");
             Console.WriteLine("2.Remove");
             Console.WriteLine("3.Update");
             Console.WriteLine("4.Turn back");
+            PrintBorder();
         }
         public void PrintSalesMenu()
         {
+            PrintBorder();
             Console.WriteLine("Bookstore sales menu:");
             Console.WriteLine("1.Add");
             Console.WriteLine("2.Remove");
             Console.WriteLine("3.Update");
             Console.WriteLine("4.Turn back");
+            PrintBorder();
         }
         public int ReadEnteredValue()
         {
@@ -57,10 +61,10 @@ namespace Common.DrawEngine
             }
         }
 
-        public SaleLength CalculateSaleLength() 
+        public SaleLength CalculateSalesLength() 
         {
-            var sales = _salesRepository.GetAll();
-            var books = _booksRepository.GetAll();
+            var sales = _salesWorkflow.GetAll();
+            var books = _booksWorkflow.GetAll();
 
             SaleLength lengthSales = new();
             string str = "Sale ID";
@@ -78,8 +82,8 @@ namespace Common.DrawEngine
             return lengthSales;
         }
         public BookLength CalculateBookLength()
-        {            
-            var books = _booksRepository.GetAll();
+        {
+            var books = _booksWorkflow.GetAll();
 
             BookLength lengthBooks = new();
 
@@ -89,10 +93,11 @@ namespace Common.DrawEngine
             lengthBooks.maxTitleLength = books.Max(b => b.Title.Length) > str.Length ? books.Max(b => b.Title.Length) : str.Length;
             str = "Author";
             lengthBooks.maxAuthorLength = books.Max(b => b.Author.Length) > str.Length ? books.Max(b => b.Author.Length) : str.Length;
+
             lengthBooks.maxStringLength = lengthBooks.maxBookIDLength + lengthBooks.maxTitleLength + lengthBooks.maxAuthorLength;
             return lengthBooks;
         }
-        public void PrintSaleColumnsNames(SaleLength lengthSales)
+        public void PrintSalesColumnsNames(SaleLength lengthSales)
         {                    
             for (int i = 0; i <= lengthSales.maxStringLength + 5; i++)
             {
@@ -110,7 +115,7 @@ namespace Common.DrawEngine
 
             dynamicIndent = lengthSales.maxAuthorLength; // Динамічний відступ, який можна змінювати
             text = "Author";
-            Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
+            Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");           
 
             dynamicIndent = lengthSales.maxPriceLength; // Динамічний відступ, який можна змінювати
             text = "Price";
@@ -124,12 +129,12 @@ namespace Common.DrawEngine
         
         public void PrintSalesContent(SaleLength lengthSales)
         {
-            var sales = _salesRepository.GetAll();
-            var books = _booksRepository.GetAll();            
+            var sales = _salesWorkflow.GetAll();
+            var books = _booksWorkflow.GetAll();
 
             foreach (var sale in sales)
             {
-                PrintSaleLowerBorder(lengthSales);
+                PrintSalesLowerBorder(lengthSales);
                 Console.Write("|");
                 var book = books.FirstOrDefault(b => b.Book_ID == sale.Book_ID);
 
@@ -159,15 +164,23 @@ namespace Common.DrawEngine
                 Console.WriteLine();
             }
         }
-        public void PrintSaleLowerBorder(SaleLength lengthSales)
+        public void PrintSalesLowerBorder(SaleLength lengthSales)
         {                   
             for (int i = 0; i <= lengthSales.maxStringLength + 5; i++)
             {
                 Console.Write("-");
             }
             Console.WriteLine();
-        }        
-        public void PrintBookColumnsNames(BookLength lengthBooks)
+        }    
+        public void PrintBorder()
+        {
+            for (int i = 0; i <= 26; i++)
+            {
+                Console.Write("-");
+            }
+            Console.WriteLine();
+        }
+        public void PrintBooksColumnsNames(BookLength lengthBooks)
         {                               
             
             for (int i = 0; i <= lengthBooks.maxStringLength + 3; i++)
@@ -193,11 +206,11 @@ namespace Common.DrawEngine
 
         public void PrintBooksContent(BookLength lengthBooks)
         {            
-            var books = _booksRepository.GetAll();
+            var books = _booksWorkflow.GetAll();
             
             foreach (var book in books)
             {
-                PrintBookLowerBorder(lengthBooks);
+                PrintBooksLowerBorder(lengthBooks);
                 Console.Write("|");                
 
                 if (book == null)
@@ -219,7 +232,7 @@ namespace Common.DrawEngine
             }
 
         }
-        public void PrintBookLowerBorder(BookLength lengthBooks)
+        public void PrintBooksLowerBorder(BookLength lengthBooks)
         {                     
             for (int i = 0; i <= lengthBooks.maxStringLength + 3; i++)
             {
@@ -229,19 +242,17 @@ namespace Common.DrawEngine
         }
         public void PrintAllSales()
         {
-            SaleLength saleLength = new();
-            saleLength = CalculateSaleLength();
-            PrintSaleColumnsNames(saleLength);
+            SaleLength saleLength = CalculateSalesLength();            
+            PrintSalesColumnsNames(saleLength);
             PrintSalesContent(saleLength);
-            PrintSaleLowerBorder(saleLength);
+            PrintSalesLowerBorder(saleLength);
         }
         public void PrintAllBooks()
         {
-            BookLength bookLength = new();
-            bookLength = CalculateBookLength();
-            PrintBookColumnsNames(bookLength);
+            BookLength bookLength = CalculateBookLength();            
+            PrintBooksColumnsNames(bookLength);
             PrintBooksContent(bookLength);
-            PrintBookLowerBorder(bookLength);
+            PrintBooksLowerBorder(bookLength);
         }
 
         public bool AddSale()
@@ -307,8 +318,8 @@ namespace Common.DrawEngine
         }
         public bool RemoveBook()
         {
-            var sales = _salesRepository.GetAll();
-            var books = _booksRepository.GetAll();
+            var sales = _salesWorkflow.GetAll();
+            var books = _booksWorkflow.GetAll();
 
             Console.WriteLine("Enter the book ID");
             var input = Console.ReadLine();
@@ -318,14 +329,9 @@ namespace Common.DrawEngine
                 PrintBooksMenu();
             }            
 
-            _booksWorkflow.DeleteEntityBook(idBook);            
-
-            foreach (var sale in sales)
-            {
-                return _booksWorkflow.DeleteEntitySales(idBook);
-            }
-            return false;
-            
+            _booksWorkflow.DeleteEntity(idBook);          
+                       
+            return true;            
         }
 
         public bool UpdateSale()
@@ -339,7 +345,7 @@ namespace Common.DrawEngine
                 return false;
             }
 
-            var sale = _salesRepository.Get(id);
+            var sale = _salesWorkflow.Get(id);
             if (sale == null)
             {
                 Console.WriteLine("No record found");
@@ -382,7 +388,7 @@ namespace Common.DrawEngine
                 return false;
             }
 
-            var book = _booksRepository.Get(id);
+            var book = _booksWorkflow.Get(id);
             if (book == null)
             {
                 Console.WriteLine("No record found");
@@ -410,13 +416,140 @@ namespace Common.DrawEngine
 
             return _booksWorkflow.UpdateSaleEntity(book);
         }
+
+        public SaleLength CalculateSaleLength()
+        {
+            var sales = _salesWorkflow.GetAll();
+            var books = _booksWorkflow.GetAll();
+
+            SaleLength lengthSales = new();
+            string str = "Sale ID";
+            lengthSales.maxSaleIDLength = sales.Max(s => s.Sale_ID.ToString().Length) > str.Length ? sales.Max(s => s.Sale_ID.ToString().Length) : str.Length;
+
+            str = "Book ID";
+            lengthSales.maxBookIDLength = sales.Max(s => s.Book_ID.ToString().Length) > str.Length ? sales.Max(s => s.Book_ID.ToString().Length) : str.Length;
+
+            str = "Price";
+            lengthSales.maxPriceLength = sales.Max(s => s.Price.ToString().Length) > str.Length ? sales.Max(s => s.Price.ToString().Length) : str.Length;
+
+            str = "Number Of Sales";
+            lengthSales.maxNumberOfSalesLength = sales.Max(s => s.Number_Of_Sales.ToString().Length) > str.Length ? sales.Max(s => s.Number_Of_Sales.ToString().Length) : str.Length;
+
+            lengthSales.maxStringLength = lengthSales.maxSaleIDLength + lengthSales.maxBookIDLength + lengthSales.maxPriceLength + lengthSales.maxNumberOfSalesLength;
+            return lengthSales;
+        }
+
+        public void PrintSaleLowerBorder(SaleLength lengthSales)
+        {
+            for (int i = 0; i <= lengthSales.maxStringLength + 4; i++)
+            {
+                Console.Write("-");
+            }
+            Console.WriteLine();
+        }        
+        public void PrintSaleColumnsNames(SaleLength lengthSales)
+        {
+            PrintSaleLowerBorder(lengthSales);            
+            Console.Write("|");
+            int dynamicIndent = lengthSales.maxSaleIDLength; // Динамічний відступ, який можна змінювати
+            string text = "Sale ID";
+            Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
+
+            dynamicIndent = lengthSales.maxBookIDLength; // Динамічний відступ, який можна змінювати
+            text = "Book ID";
+            Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");            
+
+            dynamicIndent = lengthSales.maxPriceLength; // Динамічний відступ, який можна змінювати
+            text = "Price";
+            Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
+
+            dynamicIndent = lengthSales.maxNumberOfSalesLength; // Динамічний відступ, який можна змінювати
+            text = "Number Of Sales";
+            Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
+            Console.WriteLine();
+        }
+        public void PrintSaleContent(SaleLength lengthSales, int id)
+        {
+            var sales = _salesWorkflow.GetAll();         
+                        
+            var sale = sales.SingleOrDefault(s => s.Sale_ID == id);
+
+            PrintSaleLowerBorder(lengthSales);
+            Console.Write("|");
+
+            int dynamicIndent = lengthSales.maxSaleIDLength; // Динамічний відступ, який можна змінювати
+            string text = Convert.ToString(sale.Sale_ID);
+            Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
+
+            dynamicIndent = lengthSales.maxBookIDLength; // Динамічний відступ, який можна змінювати
+            text = Convert.ToString(sale.Book_ID);
+            Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
+
+            dynamicIndent = lengthSales.maxPriceLength; // Динамічний відступ, який можна змінювати
+            text = Convert.ToString(sale.Price); ;
+            Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
+
+            dynamicIndent = lengthSales.maxNumberOfSalesLength; // Динамічний відступ, який можна змінювати
+            text = Convert.ToString(sale.Number_Of_Sales); ;
+            Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
+
+            Console.WriteLine();
+            PrintSaleLowerBorder(lengthSales);
+        }
+
+        public void PrintBookColumnsNames(BookLength lengthBook)
+        {
+            PrintBooksLowerBorder(lengthBook);
+            Console.Write("|");            
+
+            int dynamicIndent = lengthBook.maxBookIDLength; // Динамічний відступ, який можна змінювати
+            string text = "Book ID";
+            Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
+
+            dynamicIndent = lengthBook.maxTitleLength; // Динамічний відступ, який можна змінювати
+            text = "Title";
+            Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
+
+            dynamicIndent = lengthBook.maxAuthorLength; // Динамічний відступ, який можна змінювати
+            text = "Author";
+            Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
+            Console.WriteLine();
+        }
+        public void PrintBookContent(BookLength lengthBook, int id)
+        {
+            var books = _booksWorkflow.GetAll();
+
+            var book = books.SingleOrDefault(s => s.Book_ID == id);
+
+            PrintBooksLowerBorder(lengthBook);
+            Console.Write("|");
+
+            int dynamicIndent = lengthBook.maxBookIDLength; // Динамічний відступ, який можна змінювати
+            string text = Convert.ToString(book.Book_ID);
+            Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
+
+            dynamicIndent = lengthBook.maxTitleLength; // Динамічний відступ, який можна змінювати
+            text = Convert.ToString(book.Title);
+            Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
+
+            dynamicIndent = lengthBook.maxAuthorLength; // Динамічний відступ, який можна змінювати
+            text = Convert.ToString(book.Author); ;
+            Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");            
+
+            Console.WriteLine();
+            PrintBooksLowerBorder(lengthBook);
+        }
         private void PrintSale(Sale sale)
         {
-            Console.WriteLine($"{sale.Sale_ID}, {sale.Book_ID}, {sale.Price}, {sale.Number_Of_Sales}");
+            SaleLength saleLength = CalculateSaleLength();
+            PrintSaleColumnsNames(saleLength);
+            PrintSaleContent(saleLength, (int)sale.Sale_ID);                     
         }
         private void PrintBook(Book book)
         {
-            Console.WriteLine($"{book.Book_ID}, {book.Title}, {book.Author}");
+            var bookLength = CalculateBookLength();
+            PrintBookColumnsNames(bookLength);
+            PrintBookContent(bookLength, (int)book.Book_ID);
         }
     }
 }

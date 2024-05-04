@@ -9,13 +9,13 @@ namespace Infrastructure.BusinessLogic
 {
     public class BooksWorkflow : IBooksWorkflow
     {
-        private ISalesRepository _salesRepository;
+        private ISalesWorkflow _salesWorkflow;
         private IBooksRepository _booksRepository;
 
         public BooksWorkflow()
         {
             _booksRepository = new BooksRepository();
-            _salesRepository = new SalesRepository();
+            
         }
 
         public bool AddEntity(BookDto dto)
@@ -31,16 +31,29 @@ namespace Infrastructure.BusinessLogic
 
         public bool DeleteEntity(int id)
         {
-            throw new NotImplementedException();
+            _booksRepository.Remove(id);
+            _salesWorkflow = new SalesWorkflow();
+            var sales = _salesWorkflow.GetAll().Where(s => s.Book_ID == id).ToList();
+            foreach(var sale in sales)
+            {
+                _salesWorkflow.DeleteEntity((int)sale.Sale_ID);
+            }                
+            return true;
         }
 
-        public bool DeleteEntityBook(int idBook)
+        public Book? Get(long id)
         {
-            return (_booksRepository.RemoveBook(idBook));
+            return _booksRepository.Get(id);
         }
-        public bool DeleteEntitySales(long idBook)
+
+        public Book? Get(string title, string author)
         {
-            return (_booksRepository.RemoveSales(idBook));
+            return _booksRepository.Get(title, author);
+        }
+
+        public List<Book> GetAll()
+        {
+            return _booksRepository.GetAll();
         }
 
         public bool UpdateSaleEntity(Book book)

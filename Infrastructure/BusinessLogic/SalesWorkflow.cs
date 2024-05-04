@@ -10,22 +10,23 @@ namespace Infrastructure.BusinessLogic
     public class SalesWorkflow : ISalesWorkflow
     {
         private ISalesRepository _salesRepository;
-        private IBooksRepository _booksRepository;
+        private IBooksWorkflow _booksWorkflow;
         
         public SalesWorkflow()
         {
-            _booksRepository = new BooksRepository();
+            
             _salesRepository = new SalesRepository();
         }
 
         public bool AddEntity(SaleDto dto)
         {
-            var existBook = _booksRepository.Get(dto.Title, dto.Author);
+            _booksWorkflow = new BooksWorkflow();
+            var existBook = _booksWorkflow.Get(dto.Title, dto.Author);
             if (existBook == null) 
             {
-                _booksRepository.Add(new Book { Title = dto.Title, Author = dto.Author });
+                _booksWorkflow.AddEntity(new BookDto { Title = dto.Title, Author = dto.Author });
             }                       
-            var newBook = _booksRepository.Get(dto.Title, dto.Author);
+            var newBook = _booksWorkflow.Get(dto.Title, dto.Author);
             if (newBook == null)
             {
                 throw new Exception("book is null");
@@ -37,6 +38,16 @@ namespace Infrastructure.BusinessLogic
 
         public bool DeleteEntity(int id) {
             return (_salesRepository.Remove(id) == true);
+        }
+
+        public Sale? Get(long id)
+        {
+            return _salesRepository.Get(id);
+        }
+
+        public List<Sale> GetAll()
+        {
+            return _salesRepository.GetAll();
         }
 
         public bool UpdateSaleEntity(Sale sale)
