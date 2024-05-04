@@ -56,7 +56,7 @@ namespace Infrastructure.BusinessLogic
             return _booksRepository.GetAll();
         }
 
-        public bool UpdateSaleEntity(Book book)
+        public bool UpdateBookEntity(Book book)
         {
             return _booksRepository.Update(book);
         }

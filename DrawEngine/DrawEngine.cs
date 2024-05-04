@@ -65,7 +65,11 @@ namespace Common.DrawEngine
         {
             var sales = _salesWorkflow.GetAll();
             var books = _booksWorkflow.GetAll();
-
+            if (sales.Count == 0 )
+            {
+                return new SaleLength
+                { maxSaleIDLength = "Sale ID".Length, maxTitleLength = "Title".Length, maxAuthorLength = "Author".Length, maxPriceLength = "Price".Length, maxNumberOfSalesLength = "Number Of Sales".Length, maxStringLength =  38};
+            }
             SaleLength lengthSales = new();
             string str = "Sale ID";
             lengthSales.maxSaleIDLength = sales.Max(s => s.Sale_ID.ToString().Length) > str.Length ? sales.Max(s => s.Sale_ID.ToString().Length) : str.Length;
@@ -84,7 +88,11 @@ namespace Common.DrawEngine
         public BookLength CalculateBookLength()
         {
             var books = _booksWorkflow.GetAll();
-
+            if (books.Count == 0)
+            {
+                return new BookLength
+                { maxBookIDLength = "Book ID".Length, maxTitleLength = "Title".Length, maxAuthorLength = "Author".Length, maxStringLength = 18 };
+            }
             BookLength lengthBooks = new();
 
             string str = "Book ID";
@@ -259,10 +267,25 @@ namespace Common.DrawEngine
         {
             var newSale = new SaleDto();
             Console.WriteLine("Enter the author of the book");
-            newSale.Author = Console.ReadLine();
+
+            string author = Console.ReadLine();
+            if (author != string.Empty)
+                newSale.Author = Console.ReadLine();
+            else
+            {
+                Console.WriteLine($"The data was entered incorrectly: '{author}'. Select the menu item");
+                return false;
+            }            
 
             Console.WriteLine("Enter the title of the book");
-            newSale.Title = Console.ReadLine();
+            string title = Console.ReadLine();            
+            if (title != string.Empty)
+                newSale.Title = title;
+            else
+            {
+                Console.WriteLine($"The data was entered incorrectly: '{title}'. Select the menu item");
+                return false;
+            }
 
             Console.WriteLine("Enter the price of the book");
             var price = Console.ReadLine();
@@ -283,12 +306,27 @@ namespace Common.DrawEngine
         public bool AddBook()
         {
             var newBook = new BookDto();
+
             Console.WriteLine("Enter the author of the book");
-            newBook.Author = Console.ReadLine();
+            string author = Console.ReadLine();
+            if (author != string.Empty)            
+                newBook.Author = author;
+            else
+            {
+                Console.WriteLine($"The data was entered incorrectly: '{author}'. Select the menu item");
+                return false;
+            }
 
             Console.WriteLine("Enter the title of the book");
-            newBook.Title = Console.ReadLine();            
-
+            string title = Console.ReadLine();
+            if (title != string.Empty)
+                newBook.Title = title;
+            else
+            {
+                Console.WriteLine($"The data was entered incorrectly: '{title}'. Select the menu item");
+                return false;
+            }           
+ 
             return _booksWorkflow.AddEntity(newBook);
         }
 
@@ -317,10 +355,7 @@ namespace Common.DrawEngine
             return _salesWorkflow.DeleteEntity(id);
         }
         public bool RemoveBook()
-        {
-            var sales = _salesWorkflow.GetAll();
-            var books = _booksWorkflow.GetAll();
-
+        {         
             Console.WriteLine("Enter the book ID");
             var input = Console.ReadLine();
             if (!int.TryParse(input, out int idBook))
@@ -364,16 +399,7 @@ namespace Common.DrawEngine
                 sale.Number_Of_Sales = result1;
             else
                 Console.WriteLine();
-
-            Console.WriteLine("Сhange ID of book?  1 - yes, 2 - no");
-            var input1 = ReadEnteredValue();
-            if (input1 == 1)
-            {
-                Console.WriteLine("Enter a new book ID");
-                var input2 = ReadEnteredValue();
-                sale.Book_ID = input2;
-
-            }
+            
             return _salesWorkflow.UpdateSaleEntity(sale);
         }
 
@@ -398,23 +424,25 @@ namespace Common.DrawEngine
             PrintBook(book);
             Console.WriteLine("Enter a new book title");
             string title = Console.ReadLine();
-            book.Title = title;
+            if (title != string.Empty)
+                book.Title = title;
+            else
+            {
+                Console.WriteLine($"The data was entered incorrectly: '{title}'. Select the menu item");                
+                return false;
+            }                
 
             Console.WriteLine("Enter a new book author");
             string author = Console.ReadLine();
-            book.Author = author;
-
-            Console.WriteLine("Change ID of book?  1 - yes, 2 - no");
-            var input1 = ReadEnteredValue();
-            if (input1 == 1)
+            if (author != string.Empty)
+                book.Author = author;
+            else
             {
-                Console.WriteLine("Enter a new book ID");
-                var input2 = ReadEnteredValue();
-                book.Book_ID = input2;
+                Console.WriteLine($"The data was entered incorrectly: '{author}'. Select the menu item");                
+                return false;
+            }           
 
-            }
-
-            return _booksWorkflow.UpdateSaleEntity(book);
+            return _booksWorkflow.UpdateBookEntity(book);
         }
 
         public SaleLength CalculateSaleLength()
@@ -520,6 +548,11 @@ namespace Common.DrawEngine
             var books = _booksWorkflow.GetAll();
 
             var book = books.SingleOrDefault(s => s.Book_ID == id);
+
+            if (book == null) 
+            {
+                throw new Exception("The Book not found");
+            }
 
             PrintBooksLowerBorder(lengthBook);
             Console.Write("|");

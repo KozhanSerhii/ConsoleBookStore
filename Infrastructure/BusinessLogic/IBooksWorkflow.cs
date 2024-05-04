@@ -10,7 +10,7 @@ namespace Infrastructure.BusinessLogic
     {
         bool AddEntity(BookDto dto);
         bool DeleteEntity(int id);        
-        bool UpdateSaleEntity(Book dto);
+        bool UpdateBookEntity(Book dto);
         Book? Get(long id);
         List<Book> GetAll();
         Book? Get(string title, string author);
