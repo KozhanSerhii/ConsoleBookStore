@@ -63,22 +63,26 @@ namespace Infrastructure.Repositories
                     existingSale.Price = sale.Price;
                     existingSale.Number_Of_Sales = sale.Number_Of_Sales;
 
-                    Console.WriteLine("Change ID of book?  1 - yes, 2 - no");
-                    var input1 = Convert.ToInt32(Console.ReadLine());
-                    if (input1 == 1)
+                    if (sale.Book_ID != existingSale.Book_ID)
                     {
-                        Console.WriteLine("Enter a new book ID");
-                        if (long.TryParse(Console.ReadLine(), out long result))
+                        var book = context.Books.SingleOrDefault(b => b.Book_ID == sale.Book_ID);
+                        if (book != null)
                         {
-                            var book = context.Books.SingleOrDefault(b => b.Book_ID == result);
-                            if (book != null)
-                                sale.Book_ID = result;
-                            else
-                                Console.WriteLine("The book with this ID does not exist");
-                        }                                               
+                            existingSale.Book_ID = sale.Book_ID;
+                            context.SaveChanges();
+                            return true; // Повертаємо true, якщо оновлення пройшло успішно
+                        }
+
+                        else
+                        {
+                            Console.WriteLine("The book with this ID does not exist");
+                            context.SaveChanges();
+                            return true;
+                        }
                     }
+
                     context.SaveChanges();
-                    return true; // Повертаємо true, якщо оновлення пройшло успішно
+                    return true;                   
                 }
                 return false; // Повертаємо false, якщо книгу не знайдено за ID
             }

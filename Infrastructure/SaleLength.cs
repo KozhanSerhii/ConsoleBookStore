@@ -16,5 +16,6 @@ namespace Infrastructure
         public int maxNumberOfSalesLength { get; set; }
         public int maxStringLength { get; set; }
         public int maxBookIDLength { get; set; }
+        public int maxTotalAmountLength { get; set; }
     }
 }

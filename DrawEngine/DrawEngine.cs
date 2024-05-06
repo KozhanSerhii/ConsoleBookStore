@@ -82,7 +82,10 @@ namespace Common.DrawEngine
             str = "Number Of Sales";
             lengthSales.maxNumberOfSalesLength = sales.Max(s => s.Number_Of_Sales.ToString().Length) > str.Length ? sales.Max(s => s.Number_Of_Sales.ToString().Length) : str.Length;
 
-            lengthSales.maxStringLength = lengthSales.maxSaleIDLength + lengthSales.maxTitleLength + lengthSales.maxAuthorLength + lengthSales.maxPriceLength + lengthSales.maxNumberOfSalesLength;
+            str = "Total amount";
+            lengthSales.maxTotalAmountLength =  str.Length;
+
+            lengthSales.maxStringLength = lengthSales.maxSaleIDLength + lengthSales.maxTitleLength + lengthSales.maxAuthorLength + lengthSales.maxPriceLength + lengthSales.maxNumberOfSalesLength + lengthSales.maxTotalAmountLength;
             return lengthSales;
         }
         public BookLength CalculateBookLength()
@@ -107,7 +110,7 @@ namespace Common.DrawEngine
         }
         public void PrintSalesColumnsNames(SaleLength lengthSales)
         {                    
-            for (int i = 0; i <= lengthSales.maxStringLength + 5; i++)
+            for (int i = 0; i <= lengthSales.maxStringLength + 6; i++)
             {
                 Console.Write("-");
             }
@@ -131,6 +134,10 @@ namespace Common.DrawEngine
 
             dynamicIndent = lengthSales.maxNumberOfSalesLength; // Динамічний відступ, який можна змінювати
             text = "Number Of Sales";
+            Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
+
+            dynamicIndent = lengthSales.maxTotalAmountLength; // Динамічний відступ, який можна змінювати
+            text = "Total Amount";
             Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
             Console.WriteLine();
         }
@@ -169,17 +176,23 @@ namespace Common.DrawEngine
                 text = Convert.ToString(sale.Number_Of_Sales); ;
                 Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
 
+                dynamicIndent = lengthSales.maxTotalAmountLength; // Динамічний відступ, який можна змінювати
+                int result = (Convert.ToInt32(sale.Price) * Convert.ToInt32(sale.Number_Of_Sales));
+                text = result.ToString();
+                Console.Write(text + new string(' ', dynamicIndent - text.Length) + "|");
+
                 Console.WriteLine();
             }
         }
         public void PrintSalesLowerBorder(SaleLength lengthSales)
         {                   
-            for (int i = 0; i <= lengthSales.maxStringLength + 5; i++)
+            for (int i = 0; i <= lengthSales.maxStringLength + 6; i++)
             {
                 Console.Write("-");
             }
             Console.WriteLine();
-        }    
+        }      
+        
         public void PrintBorder()
         {
             for (int i = 0; i <= 26; i++)
@@ -399,7 +412,18 @@ namespace Common.DrawEngine
                 sale.Number_Of_Sales = result1;
             else
                 Console.WriteLine();
-            
+
+            Console.WriteLine("Change ID of book?  1 - yes, 2 - no");
+            var input1 = Convert.ToInt32(Console.ReadLine());
+            if (input1 == 1)
+            {
+                Console.WriteLine("Enter a new book ID");
+                if (long.TryParse(Console.ReadLine(), out long result3))
+                {
+                    sale.Book_ID = result3;                    
+                }
+            }
+
             return _salesWorkflow.UpdateSaleEntity(sale);
         }
 
