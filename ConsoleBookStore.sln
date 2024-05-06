@@ -5,7 +5,9 @@ VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleBookStore", "ConsoleBookStore\ConsoleBookStore.csproj", "{11343E7F-757E-4905-B388-BBB27E41E024}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{DC94830A-1801-40E8-BEB5-DF40893FA294}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{DC94830A-1801-40E8-BEB5-DF40893FA294}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrawEngine", "DrawEngine\DrawEngine.csproj", "{FFF25ECF-E3B7-4EA0-84E1-7C6604D14FB6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{DC94830A-1801-40E8-BEB5-DF40893FA294}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC94830A-1801-40E8-BEB5-DF40893FA294}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC94830A-1801-40E8-BEB5-DF40893FA294}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFF25ECF-E3B7-4EA0-84E1-7C6604D14FB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFF25ECF-E3B7-4EA0-84E1-7C6604D14FB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFF25ECF-E3B7-4EA0-84E1-7C6604D14FB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFF25ECF-E3B7-4EA0-84E1-7C6604D14FB6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
