@@ -5,6 +5,7 @@ using Microsoft.VisualBasic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using static System.Reflection.Metadata.BlobBuilder;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace Common.DrawEngine
@@ -50,15 +51,14 @@ namespace Common.DrawEngine
         }
         public int ReadEnteredValue()
         {
-            try
-            {
-                return Convert.ToInt32(Console.ReadLine());
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return -1;
-            }
+            var number = Console.ReadLine();
+
+            if (int.TryParse(number, out int result1))
+                return result1;
+            else
+                DrawQuestion(number);
+
+            return result1;                    
         }
 
         public SaleLength CalculateSalesLength() 
@@ -68,7 +68,7 @@ namespace Common.DrawEngine
             if (sales.Count == 0 )
             {
                 return new SaleLength
-                { maxSaleIDLength = "Sale ID".Length, maxTitleLength = "Title".Length, maxAuthorLength = "Author".Length, maxPriceLength = "Price".Length, maxNumberOfSalesLength = "Number Of Sales".Length, maxStringLength =  38};
+                { maxSaleIDLength = "Sale ID".Length, maxTitleLength = "Title".Length, maxAuthorLength = "Author".Length, maxPriceLength = "Price".Length, maxNumberOfSalesLength = "Number Of Sales".Length, maxStringLength = "Sale ID".Length+ "Title".Length+ "Author".Length+ "Price".Length+ "Number Of Sales".Length + 12, maxTotalAmountLength = 12};
             }
             SaleLength lengthSales = new();
             string str = "Sale ID";
@@ -283,12 +283,13 @@ namespace Common.DrawEngine
 
             string author = Console.ReadLine();
             if (author != string.Empty)
-                newSale.Author = Console.ReadLine();
+                newSale.Author = author;
             else
             {
-                Console.WriteLine($"The data was entered incorrectly: '{author}'. Select the menu item");
+                DrawQuestion(author);
                 return false;
-            }            
+            }
+
 
             Console.WriteLine("Enter the title of the book");
             string title = Console.ReadLine();            
@@ -296,23 +297,30 @@ namespace Common.DrawEngine
                 newSale.Title = title;
             else
             {
-                Console.WriteLine($"The data was entered incorrectly: '{title}'. Select the menu item");
+                DrawQuestion(title);
                 return false;
             }
 
             Console.WriteLine("Enter the price of the book");
             var price = Console.ReadLine();
-            if (long.TryParse(price, out long result1))
+            if (long.TryParse(price, out long result1) && result1 > 0)
                 newSale.Price = result1;
             else
+            {
                 DrawQuestion(price);
+                return false;
+            }
+                
 
             Console.WriteLine("Enter the number of copies of the book sold");
             var number = Console.ReadLine();
-            if (long.TryParse(number, out long result2))
+            if (long.TryParse(number, out long result2) && result2 > 0)
                 newSale.Number_Of_Sales = result2;
             else
+            {
                 DrawQuestion(number);
+                return false;
+            }
 
             return _salesWorkflow.AddEntity(newSale);
         }
@@ -326,7 +334,7 @@ namespace Common.DrawEngine
                 newBook.Author = author;
             else
             {
-                Console.WriteLine($"The data was entered incorrectly: '{author}'. Select the menu item");
+                DrawQuestion(author);
                 return false;
             }
 
@@ -336,29 +344,23 @@ namespace Common.DrawEngine
                 newBook.Title = title;
             else
             {
-                Console.WriteLine($"The data was entered incorrectly: '{title}'. Select the menu item");
+                DrawQuestion(title);
                 return false;
-            }           
- 
+            }
+
             return _booksWorkflow.AddEntity(newBook);
         }
 
         private void DrawQuestion(object? obj)
         {
             var value = obj is null ? "Incorrect format" : obj.ToString();
-            Console.WriteLine($"The data was entered incorrectly: {value} .Select the menu item:");
-            Console.WriteLine("1.Repeat the input");
-            Console.WriteLine("2.Return to the main menu");
-            var answer = ReadEnteredValue();
-            if (answer == 1)
-                AddSale();
-            else 
-                PrintSalesMenu();
+            Console.WriteLine($"The data was entered incorrectly: {value}");            
+            Console.WriteLine("You will return to the general menu");                         
         }
 
         public bool RemoveSale()
         {
-            Console.WriteLine("Enter the book ID");
+            Console.WriteLine("Enter the Sale ID");
             var input = Console.ReadLine();
             if (!int.TryParse(input, out int id)){
                 Console.WriteLine($"The data was entered incorrectly: {input}. Select the menu item");

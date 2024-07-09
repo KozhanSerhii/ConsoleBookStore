@@ -17,7 +17,6 @@ namespace Infrastructure.BusinessLogic
             _booksRepository = new BooksRepository();
             
         }
-
         public bool AddEntity(BookDto dto)
         {
             var existBook = _booksRepository.Get(dto.Title, dto.Author);
@@ -28,7 +27,6 @@ namespace Infrastructure.BusinessLogic
             
             return true;
         }
-
         public bool DeleteEntity(int id)
         {
             _booksRepository.Remove(id);
@@ -40,22 +38,18 @@ namespace Infrastructure.BusinessLogic
             }                
             return true;
         }
-
         public Book? Get(long id)
         {
             return _booksRepository.Get(id);
         }
-
         public Book? Get(string title, string author)
         {
             return _booksRepository.Get(title, author);
         }
-
         public List<Book> GetAll()
         {
             return _booksRepository.GetAll();
         }
-
         public bool UpdateBookEntity(Book book)
         {
             return _booksRepository.Update(book);

@@ -36,7 +36,8 @@ namespace Infrastructure.BusinessLogic
             return true;
         }
 
-        public bool DeleteEntity(int id) {
+        public bool DeleteEntity(int id)
+        {
             return (_salesRepository.Remove(id) == true);
         }
 
