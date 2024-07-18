@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public class Sale
+namespace Infrastructure
 {
-    public long Id { get; set; }
-    public string? Author { get; set; }
-    public string? Book { get; set; }
-    public long Price { get; set; }
-    public long Number_of_sales { get; set; }
+    public class Sale
+    {
+        public long Sale_ID { get; set; }
+        public long Book_ID {  get; set; }
+        public long Price { get; set; }
+        public long Number_Of_Sales { get; set; }
+    }
 }
